@@ -12,7 +12,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const NewsItemSchema = z.object({
+const NewsItemSchema = z.object({
   title: z.string().describe('The headline of the news article.'),
   summary: z.string().describe('A brief summary of the news article.'),
   source: z.string().describe('The source of the news article (e.g., WHO, CDC, Local Health Dept).'),
@@ -122,3 +122,4 @@ const fetchNewsFlow = ai.defineFlow(
     return mockData;
   }
 );
+
