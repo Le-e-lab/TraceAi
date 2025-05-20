@@ -1,40 +1,75 @@
 
 "use client";
-import { RiskScoreCalculator } from "@/components/dashboard/risk-score-calculator";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/auth-context";
-import { ArrowRight, BarChart2, CalendarCheck2, ShieldCheck, Activity } from "lucide-react";
+import { ArrowRight, BarChart2, CalendarCheck2, Activity, Users, AlertTriangle, MapPin, ShieldCheck as ProtectionIcon } from "lucide-react";
 import Link from "next/link";
-import { Progress } from "@/components/ui/progress"; // For mock progress bars
+import { useEffect, useState } from "react";
+import { CurrentRiskDisplay, type RiskLevel } from "@/components/dashboard/current-risk-display";
+import { UserStatsDashboardSection } from "@/components/dashboard/user-stats-dashboard-section";
+
+// Mock data for "Today's fight" section based on image
+const mockDashboardData = {
+  totalCheckInToday: 12329,
+  feelingGoodPercent: 80,
+  someSymptomsPercent: 20,
+  latestUpdateStat: 2615,
+};
+
+// Mock data for pre-calculated risk
+const mockCurrentRisk = {
+  score: 42,
+  level: "medium" as RiskLevel,
+  advice: "Consider limiting non-essential activities."
+};
+
+// Mock data for User Stats section
+const mockUserStats = {
+  exposures: { value: 4, label: "Last 14 days", icon: Users },
+  highRiskContacts: { value: 1, label: "Exposures", icon: AlertTriangle },
+  localHotspots: { value: 3, label: "Nearby areas", icon: MapPin },
+  protectionLevel: { value: "High", label: "Fully Vaccinated (Mock)", icon: ProtectionIcon },
+};
+
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const [currentRiskLevel, setCurrentRiskLevel] = useState<RiskLevel>("medium");
+  const [currentRiskScore, setCurrentRiskScore] = useState<number>(42);
+  const [currentRiskAdvice, setCurrentRiskAdvice] = useState("Consider limiting non-essential activities.");
 
-  // Mock data for "Today's fight" section based on image
-  const mockData = {
-    totalCheckInToday: 12329,
-    feelingGoodPercent: 80,
-    someSymptomsPercent: 20,
-    latestUpdateStat: 2615,
-  };
+  useEffect(() => {
+    // In a real app, you might fetch this data or calculate it
+    setCurrentRiskScore(mockCurrentRisk.score);
+    setCurrentRiskLevel(mockCurrentRisk.level);
+    setCurrentRiskAdvice(mockCurrentRisk.advice);
+  }, []);
+
 
   return (
     <div className="container mx-auto py-2 space-y-6">
-      {/* Header - removed for simpler look, title is in AppNavbar */}
+      {/* User Greeting - could be added if desired like "Hello, {user?.email}" */}
       {/* 
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Welcome, {user?.email}!
-        </h1>
-        <p className="text-muted-foreground">
-          Here&apos;s your TraceWise overview. Stay informed and safe.
+      <div className="mb-2">
+        <h1 className="text-2xl font-semibold text-foreground">Hello, {user?.email?.split('@')[0]}!</h1>
+        <p className="text-sm text-muted-foreground">
+          {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
       </div>
       */}
 
-      {/* Symptom Check-In Link Card - Prominent like the design */}
-      <Card className="shadow-lg bg-card hover:bg-muted/50 transition-colors">
+      {/* Current Risk Display */}
+      <CurrentRiskDisplay 
+        riskScore={currentRiskScore} 
+        riskLevel={currentRiskLevel} 
+        advice={currentRiskAdvice} 
+      />
+
+      {/* User Stats Section */}
+      <UserStatsDashboardSection stats={mockUserStats} />
+      
+      {/* Symptom Check-In Link Card - Hidden on mobile, visible on md+ */}
+      <Card className="shadow-lg bg-card hover:bg-muted/50 transition-colors hidden md:block">
         <Link href="/symptoms" passHref>
           <CardHeader className="flex flex-row items-center justify-between cursor-pointer p-4">
             <div className="flex items-center gap-3">
@@ -48,53 +83,10 @@ export default function DashboardPage() {
           </CardHeader>
         </Link>
       </Card>
-
-      {/* Today's Summary / Risk Score Area - "Today's fight" from design */}
-      <Card className="shadow-lg">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xl flex items-center gap-2 text-foreground">
-            <Activity className="h-6 w-6 text-primary" />
-            Today&apos;s Summary
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center md:text-left">
-            <div className="rounded-lg bg-primary/10 p-3">
-              <p className="text-2xl font-bold text-primary">{mockData.totalCheckInToday.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">Total Check-Ins Today (Mock)</p>
-            </div>
-            <div className="rounded-lg bg-primary/10 p-3">
-              <p className="text-2xl font-bold text-primary">{mockData.latestUpdateStat.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">App Engagements (Mock)</p>
-            </div>
-          </div>
-          
-          {/* Mock Progress Bars */}
-          <div className="space-y-2 pt-2">
-            <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-green-600">Feeling Good</span>
-                <span className="text-green-600">{mockData.feelingGoodPercent}%</span>
-              </div>
-              <Progress value={mockData.feelingGoodPercent} className="h-2 [&>div]:bg-green-500" />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-orange-600">Some Symptoms</span>
-                <span className="text-orange-600">{mockData.someSymptomsPercent}%</span>
-              </div>
-              <Progress value={mockData.someSymptomsPercent} className="h-2 [&>div]:bg-orange-500" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Risk Score Calculator - integrated or can be separate card */}
-      <RiskScoreCalculator />
       
-      {/* "Latest update" section from design - placeholder */}
+      {/* "National Picture" section - placeholder */}
       <Card className="shadow-lg bg-card hover:bg-muted/50 transition-colors">
-        <Link href="#" passHref>
+        <Link href="#" passHref> {/* Consider linking to /news or a dedicated analytics page */}
           <CardHeader className="flex flex-row items-center justify-between cursor-pointer p-4">
             <div className="flex items-center gap-3">
               <BarChart2 className="h-8 w-8 text-secondary" />
@@ -108,7 +100,9 @@ export default function DashboardPage() {
         </Link>
       </Card>
 
-      {/* Removed "Quick Actions" and "Digital Contact Tracing" info card to match new design's focus */}
+      {/* The RiskScoreCalculator form is now removed from the main dashboard to match the new design. 
+          It could be moved to a dedicated page or modal if calculation input is still desired. */}
+
     </div>
   );
 }

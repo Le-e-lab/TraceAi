@@ -26,11 +26,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { explainRiskScore, type ExplainRiskScoreInput } from "@/ai/flows/risk-score-explanation";
 import { useState } from "react";
-import { Loader2, Zap, ShieldCheck } from "lucide-react"; // Added ShieldCheck
+import { Loader2, Zap, ShieldCheck } from "lucide-react"; 
 import { RiskScoreMeter } from "./risk-score-meter";
 import { useToast } from "@/hooks/use-toast";
+import type { RiskLevel } from "./current-risk-display"; // Use RiskLevel from current-risk-display
 
-type RiskLevel = "low" | "medium" | "high";
+// This component is no longer directly rendered on the main dashboard page by default
+// but is kept here as it contains the form logic for calculating risk score.
+// It could be used on a separate page or in a modal if detailed input is needed.
 
 export function RiskScoreCalculator() {
   const [isLoading, setIsLoading] = useState(false);
@@ -97,7 +100,7 @@ export function RiskScoreCalculator() {
 
   return (
     <div className="space-y-6">
-      {/* RiskScoreMeter is now more integrated or styled differently */}
+      {/* RiskScoreMeter shows results after calculation */}
       {calculatedRisk && (
         <RiskScoreMeter riskLevel={calculatedRisk} explanation={riskExplanation} />
       )}
@@ -106,7 +109,7 @@ export function RiskScoreCalculator() {
         <CardHeader>
           <CardTitle className="text-xl flex items-center gap-2 text-foreground">
             <ShieldCheck className="h-6 w-6 text-primary" />
-            Calculate Your AI Risk Score
+            Calculate Your Detailed AI Risk Score
           </CardTitle>
           <CardDescription className="text-xs">
             Input your recent activity to estimate your potential exposure risk and get an AI-powered explanation.

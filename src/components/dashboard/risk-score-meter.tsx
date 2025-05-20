@@ -5,8 +5,10 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ShieldAlert, ShieldCheck, ShieldQuestion, Info } from "lucide-react";
+import type { RiskLevel } from "./current-risk-display"; // Import RiskLevel
 
-type RiskLevel = "low" | "medium" | "high" | null;
+// This component displays the risk meter after a calculation from RiskScoreCalculator
+// It might be used if the full calculator form is shown (e.g., on a separate page or modal)
 
 interface RiskScoreMeterProps {
   riskLevel: RiskLevel;
@@ -19,7 +21,7 @@ export function RiskScoreMeter({ riskLevel, explanation }: RiskScoreMeterProps) 
       case "low":
         return {
           label: "Low Risk",
-          color: "bg-green-500", 
+          progressColor: "bg-green-500", 
           textColor: "text-green-700 dark:text-green-400",
           icon: <ShieldCheck className="h-6 w-6 text-green-500" />,
           value: 25,
@@ -28,7 +30,7 @@ export function RiskScoreMeter({ riskLevel, explanation }: RiskScoreMeterProps) 
       case "medium":
         return {
           label: "Medium Risk",
-          color: "bg-yellow-500",
+          progressColor: "bg-yellow-500",
           textColor: "text-yellow-700 dark:text-yellow-400",
           icon: <ShieldAlert className="h-6 w-6 text-yellow-500" />,
           value: 60,
@@ -37,16 +39,16 @@ export function RiskScoreMeter({ riskLevel, explanation }: RiskScoreMeterProps) 
       case "high":
         return {
           label: "High Risk",
-          color: "bg-red-500",
+          progressColor: "bg-red-500",
           textColor: "text-red-700 dark:text-red-400",
           icon: <ShieldAlert className="h-6 w-6 text-red-500" />,
           value: 90,
           description: "Your estimated risk is high. Please take precautions and consider advice.",
         };
-      default: // Should not happen if calculatedRisk is not null when rendering
+      default: 
         return {
           label: "Undetermined",
-          color: "bg-gray-400",
+          progressColor: "bg-gray-400",
           textColor: "text-gray-600 dark:text-gray-400",
           icon: <ShieldQuestion className="h-6 w-6 text-gray-500" />,
           value: 0,
@@ -63,13 +65,13 @@ export function RiskScoreMeter({ riskLevel, explanation }: RiskScoreMeterProps) 
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2 text-foreground">
             {riskProps.icon}
-            Current Risk Level
+            Calculated Risk Level
           </CardTitle>
           <span className={cn("text-xl font-bold", riskProps.textColor)}>{riskProps.label}</span>
         </div>
       </CardHeader>
       <CardContent className="space-y-3 pt-0">
-        <Progress value={riskProps.value} className={cn("h-3 rounded", riskProps.color)} />
+        <Progress value={riskProps.value} className={cn("h-3 rounded", riskProps.progressColor)} />
         <CardDescription className="text-xs">{riskProps.description}</CardDescription>
         {explanation && (
           <div className="mt-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
