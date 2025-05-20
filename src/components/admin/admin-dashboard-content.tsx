@@ -8,6 +8,7 @@ import { Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 import { MockHeatmap } from "./mock-heatmap";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle, TrendingUp, Users, MapPin } from "lucide-react";
+import type { UserRole } from "@/contexts/auth-context";
 
 const riskLevelData = [
   { name: 'Region A', low: 400, medium: 240, high: 100 },
@@ -29,8 +30,23 @@ const chartConfig = {
   value: { label: "Individuals" }
 };
 
+interface AdminDashboardContentProps {
+  userRole: UserRole | undefined | null;
+}
 
-export function AdminDashboardContent() {
+export function AdminDashboardContent({ userRole }: AdminDashboardContentProps) {
+  if (userRole !== 'healthcare_worker') {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 p-4 text-center">
+        <AlertTriangle className="h-16 w-16 text-destructive mb-4" />
+        <h2 className="text-2xl font-semibold text-foreground mb-2">Access Denied</h2>
+        <p className="text-muted-foreground">
+          You do not have the necessary permissions to view this dashboard.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -143,4 +159,3 @@ export function AdminDashboardContent() {
     </div>
   );
 }
-

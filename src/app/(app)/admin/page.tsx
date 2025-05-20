@@ -17,7 +17,7 @@ export default function AdminPage() {
     }
   }, [user, isLoading, router]);
 
-  if (isLoading || user?.role !== 'healthcare_worker') {
+  if (isLoading || (!isLoading && user?.role !== 'healthcare_worker')) {
     return (
       <div className="flex h-[calc(100vh-theme(spacing.16))] w-full items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -35,7 +35,7 @@ export default function AdminPage() {
           Real-time monitoring and insights for health authorities.
         </p>
       </div>
-      <AdminDashboardContent />
+      <AdminDashboardContent userRole={user?.role} />
     </div>
   );
 }
