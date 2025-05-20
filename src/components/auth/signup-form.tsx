@@ -3,7 +3,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { SignupData } from "@/lib/schemas";
+import type { SignupData } from "@/lib/schemas"; // SignupData will no longer have role
 import { SignupSchema } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,15 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useAuth, type UserRole } from "@/contexts/auth-context";
-import { Loader2, UserPlus } from "lucide-react";
+import { Loader2, UserPlus, Briefcase } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 
@@ -31,19 +24,19 @@ export function SignupForm() {
   const { signup, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
 
-  const form = useForm<SignupData>({
+  const form = useForm<SignupData>({ // SignupData no longer includes role
     resolver: zodResolver(SignupSchema),
     defaultValues: {
       email: "",
       password: "",
       confirmPassword: "",
-      role: "public",
+      // role: "public", // Default role removed from form values
     },
   });
 
-  async function onSubmit(data: SignupData) {
+  async function handleSignup(data: SignupData, role: UserRole) {
     try {
-      await signup(data);
+      await signup(data, role); // Pass role explicitly
       toast({
         title: "Signup Successful",
         description: "Your TraceWise account has been created.",
@@ -56,10 +49,14 @@ export function SignupForm() {
       });
     }
   }
+  
+  const onSubmitPublic = (data: SignupData) => handleSignup(data, 'public');
+  const onSubmitHealthcare = (data: SignupData) => handleSignup(data, 'healthcare_worker');
+
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form className="space-y-4">
         <FormField
           control={form.control}
           name="email"
@@ -99,28 +96,14 @@ export function SignupForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-xs">Select Your Role</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value as UserRole}>
-                <FormControl>
-                  <SelectTrigger className="bg-input text-sm">
-                    <SelectValue placeholder="Select a role" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="public">Public User</SelectItem>
-                  <SelectItem value="healthcare_worker">Healthcare Worker</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full !mt-6 bg-secondary text-secondary-foreground hover:bg-secondary/90" disabled={authLoading}>
+        {/* Role Select removed */}
+
+        <Button 
+          type="button" 
+          onClick={form.handleSubmit(onSubmitPublic)} 
+          className="w-full !mt-6 bg-secondary text-secondary-foreground hover:bg-secondary/90" 
+          disabled={authLoading}
+        >
           {authLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
@@ -128,7 +111,23 @@ export function SignupForm() {
           )}
           Create Account
         </Button>
-        <p className="text-center text-xs text-muted-foreground">
+
+        <Button 
+          type="button" 
+          onClick={form.handleSubmit(onSubmitHealthcare)}
+          variant="outline" 
+          className="w-full" 
+          disabled={authLoading}
+        >
+          {authLoading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Briefcase className="mr-2 h-4 w-4" />
+          )}
+          Sign Up as Healthcare Worker
+        </Button>
+
+        <p className="text-center text-xs text-muted-foreground pt-2">
           Already have an account?{" "}
           <Link href="/login" className="font-medium text-secondary hover:underline">
             Login here

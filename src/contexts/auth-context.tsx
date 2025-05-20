@@ -16,7 +16,7 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   login: (credentials: LoginData, role: UserRole) => Promise<void>;
-  signup: (details: SignupData) => Promise<void>;
+  signup: (details: SignupData, role: UserRole) => Promise<void>; // Updated signature
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -56,11 +56,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     router.push(loggedInUser.role === 'healthcare_worker' ? '/admin' : '/dashboard');
   };
 
-  const signup = async (details: SignupData) => {
+  // Updated signup to accept role as a parameter
+  const signup = async (details: SignupData, role: UserRole) => {
     setIsLoading(true);
     // Mock API call
     await new Promise(resolve => setTimeout(resolve, 1000));
-    const newUser: User = { id: Date.now().toString(), email: details.email, role: details.role };
+    // 'role' now comes from the parameter, not details.role
+    const newUser: User = { id: Date.now().toString(), email: details.email, role: role };
     setUser(newUser);
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newUser));
     setIsLoading(false);

@@ -15,16 +15,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth, type UserRole } from "@/contexts/auth-context";
-import { Loader2, LogIn } from "lucide-react";
+import { Loader2, LogIn, Briefcase } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export function LoginForm() {
   const { login, isLoading: authLoading } = useAuth();
-  const [selectedRole, setSelectedRole] = useState<UserRole>('public');
   const { toast } = useToast();
 
   const form = useForm<LoginData>({
@@ -35,9 +32,9 @@ export function LoginForm() {
     },
   });
 
-  async function onSubmit(data: LoginData) {
+  async function handleLogin(data: LoginData, role: UserRole) {
     try {
-      await login(data, selectedRole);
+      await login(data, role);
       toast({
         title: "Login Successful",
         description: `Welcome back to TraceWise!`,
@@ -51,9 +48,12 @@ export function LoginForm() {
     }
   }
 
+  const onSubmitPublic = (data: LoginData) => handleLogin(data, 'public');
+  const onSubmitHealthcare = (data: LoginData) => handleLogin(data, 'healthcare_worker');
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form className="space-y-4">
         <FormField
           control={form.control}
           name="email"
@@ -80,29 +80,15 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <FormItem className="pt-2">
-          <FormLabel className="text-xs">Select Your Role</FormLabel>
-          <RadioGroup
-            onValueChange={(value) => setSelectedRole(value as UserRole)}
-            defaultValue={selectedRole}
-            className="flex space-x-4 pt-1"
-          >
-            <FormItem className="flex items-center space-x-2">
-              <FormControl>
-                <RadioGroupItem value="public" id="role-public" />
-              </FormControl>
-              <FormLabel htmlFor="role-public" className="font-normal text-xs">Public User</FormLabel>
-            </FormItem>
-            <FormItem className="flex items-center space-x-2">
-              <FormControl>
-                <RadioGroupItem value="healthcare_worker" id="role-healthcare" />
-              </FormControl>
-              <FormLabel htmlFor="role-healthcare" className="font-normal text-xs">Healthcare Worker</FormLabel>
-            </FormItem>
-          </RadioGroup>
-        </FormItem>
+        
+        {/* Role selection removed */}
 
-        <Button type="submit" className="w-full !mt-6 bg-secondary text-secondary-foreground hover:bg-secondary/90" disabled={authLoading}>
+        <Button 
+          type="button" // Change to button to prevent default form submission
+          onClick={form.handleSubmit(onSubmitPublic)} 
+          className="w-full !mt-6 bg-secondary text-secondary-foreground hover:bg-secondary/90" 
+          disabled={authLoading}
+        >
           {authLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
@@ -110,7 +96,23 @@ export function LoginForm() {
           )}
           Login to TraceWise
         </Button>
-        <p className="text-center text-xs text-muted-foreground">
+
+        <Button 
+          type="button" // Change to button
+          onClick={form.handleSubmit(onSubmitHealthcare)}
+          variant="outline" 
+          className="w-full" 
+          disabled={authLoading}
+        >
+          {authLoading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Briefcase className="mr-2 h-4 w-4" />
+          )}
+          Healthcare Worker Sign In
+        </Button>
+
+        <p className="text-center text-xs text-muted-foreground pt-2">
           Don&apos;t have an account?{" "}
           <Link href="/signup" className="font-medium text-secondary hover:underline">
             Sign up here
