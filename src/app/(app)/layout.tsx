@@ -65,7 +65,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
                 <Link href={link.href} legacyBehavior passHref>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === link.href || (pathname.startsWith(link.href) && link.href !== '/dashboard' && link.href !== '/')}
+                    isActive={pathname === link.href || (pathname.startsWith(link.href) && link.href !== '/dashboard' && link.href !== '/' && link.href !== '/admin')}
                     tooltip={link.tooltip || link.label}
                     className="justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
                   >
@@ -108,7 +108,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider defaultOpen={false}> 
+    <SidebarProvider defaultOpen={true}> 
       <AppLayoutContent>{children}</AppLayoutContent>
     </SidebarProvider>
   );

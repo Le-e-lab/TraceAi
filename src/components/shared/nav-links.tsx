@@ -15,42 +15,42 @@ export interface NavLink {
 export const navLinks: NavLink[] = [
   {
     href: "/dashboard",
-    label: "Home", // Changed from "Overview"
-    icon: Home,    // Changed from LayoutGrid
-    roles: ["public", "healthcare_worker"],
+    label: "Home", 
+    icon: Home,    
+    roles: ["public"], // Only for public users
     tooltip: "Your current status and overview.",
   },
   {
     href: "/symptoms",
     label: "Check-In",
     icon: CalendarCheck2,
-    roles: ["public", "healthcare_worker"],
+    roles: ["public"], // Only for public users
     tooltip: "Log your symptoms or health status.",
   },
   {
-    href: "/exposure", // New Exposure link
+    href: "/exposure", 
     label: "Exposure",
     icon: MapPin,
-    roles: ["public", "healthcare_worker"],
+    roles: ["public"], // Only for public users
     tooltip: "View potential exposure areas and contacts.",
   },
   {
     href: "/news",
     label: "News",
     icon: Newspaper,
-    roles: ["public", "healthcare_worker"],
+    roles: ["public"], // Only for public users
     tooltip: "Latest health news and alerts.",
   },
   {
     href: "/feedback",
     label: "Feedback",
     icon: MessageSquare,
-    roles: ["public", "healthcare_worker"],
+    roles: ["public"], // Only for public users
     tooltip: "Share your app experience.",
   },
   {
     href: "/admin",
-    label: "Analytics",
+    label: "Analytics", // This is the main/only link for healthcare_worker
     icon: BarChart3,
     roles: ["healthcare_worker"],
     tooltip: "Monitor regional data and insights.",
