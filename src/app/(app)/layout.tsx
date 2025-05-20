@@ -49,11 +49,11 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* Desktop/Tablet Sidebar - styled to be less prominent or match new theme */}
+      {/* Desktop/Tablet Sidebar - styled to use sidebar specific theme */}
       <Sidebar 
         variant="sidebar" 
         collapsible="icon" 
-        className="border-r bg-card hidden md:flex" // bg-card to match general theme
+        className="border-r bg-sidebar hidden md:flex" // Use bg-sidebar
       >
         <SidebarHeader className="p-4">
           {/* Optional: TraceWise text logo for collapsed sidebar */}
@@ -81,7 +81,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
         </SidebarContent>
         <SidebarFooter className="p-2">
           <Separator className="my-2 bg-sidebar-border" />
-           <Button variant="ghost" onClick={() => { /* Navigate to settings page or open modal */ alert("Settings clicked!")}} className="w-full justify-start gap-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+           <Button variant="ghost" onClick={() => { router.push('/settings_placeholder') /* TODO: Implement actual settings page/modal */}} className="w-full justify-start gap-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
              <Settings className="h-5 w-5" />
              <span>Settings</span>
            </Button>
@@ -95,7 +95,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
       <SidebarInset>
         <AppNavbar />
         <main className={cn(
-          "flex-1 p-4 md:p-6 lg:p-8 overflow-auto bg-background", // Ensure bg-background for main content area
+          "flex-1 p-4 md:p-6 lg:p-8 overflow-auto bg-background",
           isMobile ? "pb-20" : "" 
         )}>
             {children}
@@ -108,7 +108,6 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    // Default open state for sidebar might need adjustment based on new design's emphasis
     <SidebarProvider defaultOpen={false}> 
       <AppLayoutContent>{children}</AppLayoutContent>
     </SidebarProvider>
