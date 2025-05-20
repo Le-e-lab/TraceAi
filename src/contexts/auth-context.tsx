@@ -1,0 +1,89 @@
+
+"use client";
+
+import type { LoginData, SignupData } from '@/lib/schemas';
+import { useRouter } from 'next/navigation';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
+export type UserRole = 'public' | 'healthcare_worker';
+
+export interface User {
+  id: string;
+  email: string;
+  role: UserRole;
+}
+
+interface AuthContextType {
+  user: User | null;
+  login: (credentials: LoginData, role: UserRole) => Promise<void>;
+  signup: (details: SignupData) => Promise<void>;
+  logout: () => void;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const AUTH_STORAGE_KEY = 'traceWiseUser';
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Failed to parse user from localStorage", error);
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+      }
+    }
+    setIsLoading(false);
+  }, []);
+
+  const login = async (credentials: LoginData, role: UserRole) => {
+    setIsLoading(true);
+    // Mock API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const loggedInUser: User = { id: Date.now().toString(), email: credentials.email, role };
+    setUser(loggedInUser);
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(loggedInUser));
+    setIsLoading(false);
+    router.push(loggedInUser.role === 'healthcare_worker' ? '/admin' : '/dashboard');
+  };
+
+  const signup = async (details: SignupData) => {
+    setIsLoading(true);
+    // Mock API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const newUser: User = { id: Date.now().toString(), email: details.email, role: details.role };
+    setUser(newUser);
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newUser));
+    setIsLoading(false);
+    router.push(newUser.role === 'healthcare_worker' ? '/admin' : '/dashboard');
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    router.push('/login');
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, signup, logout, isLoading, isAuthenticated: !!user }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
