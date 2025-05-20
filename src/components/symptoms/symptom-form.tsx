@@ -21,7 +21,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon, FileText, Loader2 } from "lucide-react";
+import { CalendarIcon, FileText, Loader2, Activity } from "lucide-react";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -46,41 +46,42 @@ export function SymptomForm() {
   async function onSubmit(data: SymptomReportData) {
     setIsLoading(true);
     console.log("Symptom Report Submitted:", data);
-    // Mock API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     setIsLoading(false);
     toast({
       title: "Symptoms Reported",
       description: "Your health status has been successfully logged. Thank you!",
     });
-    form.reset(); // Reset form after successful submission
+    form.reset(); 
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto shadow-lg">
+    <Card className="w-full max-w-2xl mx-auto shadow-xl">
       <CardHeader>
-        <CardTitle className="text-2xl">Symptom Self-Reporting</CardTitle>
-        <CardDescription>
-          Please report any symptoms you are experiencing. This helps us monitor community health.
-          An optional daily reminder can be set up (feature coming soon).
+        <CardTitle className="text-2xl flex items-center gap-2">
+          <Activity className="h-7 w-7 text-primary" />
+          Symptom Check-In
+        </CardTitle>
+        <CardDescription className="text-sm">
+          Please report any symptoms you are experiencing. This helps monitor community health.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="reportDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Report Date</FormLabel>
+                  <FormLabel className="text-xs">Report Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "w-full pl-3 text-left font-normal",
+                            "w-full pl-3 text-left font-normal bg-input text-sm",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -110,7 +111,7 @@ export function SymptomForm() {
               )}
             />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {[
                 { name: "fever", label: "Fever" },
                 { name: "cough", label: "Cough" },
@@ -123,7 +124,7 @@ export function SymptomForm() {
                   control={form.control}
                   name={symptom.name as keyof SymptomReportData}
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+                    <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-lg border bg-input/50 p-3">
                        <FormControl>
                         <Checkbox
                           checked={field.value as boolean}
@@ -131,7 +132,7 @@ export function SymptomForm() {
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel>{symptom.label}</FormLabel>
+                        <FormLabel className="text-sm font-normal">{symptom.label}</FormLabel>
                       </div>
                     </FormItem>
                   )}
@@ -144,22 +145,22 @@ export function SymptomForm() {
               name="symptoms"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Other Symptoms or Details</FormLabel>
+                  <FormLabel className="text-xs">Other Symptoms or Details</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Describe any other symptoms or relevant details..."
-                      className="min-h-[100px]"
+                      className="min-h-[100px] bg-input text-sm"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription className="text-xs">
                     Please provide as much detail as possible.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full !mt-8 bg-secondary text-secondary-foreground hover:bg-secondary/90" disabled={isLoading}>
               {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (

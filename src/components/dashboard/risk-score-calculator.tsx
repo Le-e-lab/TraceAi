@@ -26,7 +26,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { explainRiskScore, type ExplainRiskScoreInput } from "@/ai/flows/risk-score-explanation";
 import { useState } from "react";
-import { Loader2, Zap } from "lucide-react";
+import { Loader2, Zap, ShieldCheck } from "lucide-react"; // Added ShieldCheck
 import { RiskScoreMeter } from "./risk-score-meter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -47,13 +47,12 @@ export function RiskScoreCalculator() {
     },
   });
 
-  // Simple logic to determine risk score for MVP
   const determineRiskScore = (data: RiskScoreInputData): RiskLevel => {
     let score = 0;
     if (data.contactFrequency > 5) score += 1;
     if (data.contactFrequency > 10) score += 1;
-    if (data.contactDuration > 60) score += 1; // More than 1 hour
-    if (data.contactDuration > 180) score +=1; // More than 3 hours
+    if (data.contactDuration > 60) score += 1; 
+    if (data.contactDuration > 180) score +=1; 
     if (data.locationRiskLevel === "medium") score += 1;
     if (data.locationRiskLevel === "high") score += 2;
 
@@ -98,28 +97,34 @@ export function RiskScoreCalculator() {
 
   return (
     <div className="space-y-6">
-      <RiskScoreMeter riskLevel={calculatedRisk} explanation={riskExplanation} />
+      {/* RiskScoreMeter is now more integrated or styled differently */}
+      {calculatedRisk && (
+        <RiskScoreMeter riskLevel={calculatedRisk} explanation={riskExplanation} />
+      )}
       
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle>Calculate Your Risk Score</CardTitle>
-          <CardDescription>
-            Enter details about your recent contacts and locations to estimate your risk level and get an AI-powered explanation.
+          <CardTitle className="text-xl flex items-center gap-2 text-foreground">
+            <ShieldCheck className="h-6 w-6 text-primary" />
+            Calculate Your AI Risk Score
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Input your recent activity to estimate your potential exposure risk and get an AI-powered explanation.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="contactFrequency"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Contact Frequency</FormLabel>
+                    <FormLabel className="text-xs">Contact Frequency</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="e.g., 5" {...field} />
+                      <Input type="number" placeholder="e.g., 5 contacts" {...field} className="bg-input text-sm"/>
                     </FormControl>
-                    <FormDescription>Number of unique close contacts in the last 7 days.</FormDescription>
+                    <FormDescription className="text-xs">Close contacts in last 7 days.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -129,11 +134,11 @@ export function RiskScoreCalculator() {
                 name="contactDuration"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Average Contact Duration (minutes)</FormLabel>
+                    <FormLabel className="text-xs">Avg. Contact Duration (mins)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="e.g., 30" {...field} />
+                      <Input type="number" placeholder="e.g., 30 minutes" {...field} className="bg-input text-sm"/>
                     </FormControl>
-                    <FormDescription>Average duration of close contacts in minutes.</FormDescription>
+                    <FormDescription className="text-xs">Average duration of close contacts.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -143,10 +148,10 @@ export function RiskScoreCalculator() {
                 name="locationRiskLevel"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Visited Location Risk Level</FormLabel>
+                    <FormLabel className="text-xs">Visited Location Risk</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-input text-sm">
                           <SelectValue placeholder="Select risk level" />
                         </SelectTrigger>
                       </FormControl>
@@ -156,12 +161,12 @@ export function RiskScoreCalculator() {
                         <SelectItem value="high">High Risk Locations</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormDescription>Predominant risk level of locations visited recently.</FormDescription>
+                    <FormDescription className="text-xs">Predominant risk level of locations visited.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full !mt-6 bg-secondary text-secondary-foreground hover:bg-secondary/90" disabled={isLoading}>
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (

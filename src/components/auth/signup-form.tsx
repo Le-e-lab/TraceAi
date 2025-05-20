@@ -59,15 +59,15 @@ export function SignupForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel className="text-xs">Email Address</FormLabel>
               <FormControl>
-                <Input placeholder="you@example.com" {...field} />
+                <Input placeholder="you@example.com" {...field} className="bg-input text-sm" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,9 +78,9 @@ export function SignupForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-xs">Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} />
+                <Input type="password" placeholder="••••••••" {...field} className="bg-input text-sm"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -91,9 +91,9 @@ export function SignupForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel className="text-xs">Confirm Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} />
+                <Input type="password" placeholder="••••••••" {...field} className="bg-input text-sm"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -104,10 +104,10 @@ export function SignupForm() {
           name="role"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Select Your Role</FormLabel>
+              <FormLabel className="text-xs">Select Your Role</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value as UserRole}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-input text-sm">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
                 </FormControl>
@@ -120,7 +120,7 @@ export function SignupForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={authLoading}>
+        <Button type="submit" className="w-full !mt-6 bg-secondary text-secondary-foreground hover:bg-secondary/90" disabled={authLoading}>
           {authLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
@@ -128,10 +128,10 @@ export function SignupForm() {
           )}
           Create Account
         </Button>
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-xs text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-primary hover:underline">
-            Login
+          <Link href="/login" className="font-medium text-secondary hover:underline">
+            Login here
           </Link>
         </p>
       </form>

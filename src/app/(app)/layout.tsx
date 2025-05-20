@@ -4,9 +4,9 @@
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter, usePathname } from "next/navigation";
 import React, { useEffect } from "react";
-import { Loader2, LogOut } from "lucide-react";
+import { Loader2, LogOut, Settings } from "lucide-react"; // Added Settings
 import { AppNavbar } from "@/components/shared/app-navbar";
-import { getFilteredNavLinks, type NavLink as AppNavLinkType } from "@/components/shared/nav-links";
+import { getFilteredNavLinks } from "@/components/shared/nav-links";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
@@ -19,18 +19,17 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   SidebarInset,
-  useSidebar, // Import useSidebar to get isMobile status
+  useSidebar, 
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { MobileBottomNavbar } from "@/components/shared/mobile-bottom-navbar";
 
-// Inner component to access useSidebar context
 function AppLayoutContent({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const { isMobile } = useSidebar(); // Get isMobile from context
+  const { isMobile } = useSidebar(); 
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -50,13 +49,14 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      {/* Desktop/Tablet Sidebar - styled to be less prominent or match new theme */}
       <Sidebar 
         variant="sidebar" 
         collapsible="icon" 
-        className="border-r" // This sidebar will be hidden on small mobile by its internal logic
+        className="border-r bg-card hidden md:flex" // bg-card to match general theme
       >
         <SidebarHeader className="p-4">
-          {/* Sidebar header content if needed, like a logo or app name for collapsed view */}
+          {/* Optional: TraceWise text logo for collapsed sidebar */}
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -65,9 +65,9 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
                 <Link href={link.href} legacyBehavior passHref>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === link.href || (pathname.startsWith(link.href) && link.href !== '/dashboard')}
+                    isActive={pathname === link.href || (pathname.startsWith(link.href) && link.href !== '/dashboard' && link.href !== '/')}
                     tooltip={link.tooltip || link.label}
-                    className="justify-start"
+                    className="justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
                   >
                     <a>
                       <link.icon className="h-5 w-5" />
@@ -80,18 +80,23 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="p-2">
-          <Separator className="my-2" />
-           <Button variant="ghost" onClick={logout} className="w-full justify-start gap-2 text-sm">
+          <Separator className="my-2 bg-sidebar-border" />
+           <Button variant="ghost" onClick={() => { /* Navigate to settings page or open modal */ alert("Settings clicked!")}} className="w-full justify-start gap-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+             <Settings className="h-5 w-5" />
+             <span>Settings</span>
+           </Button>
+           <Button variant="ghost" onClick={logout} className="w-full justify-start gap-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
              <LogOut className="h-5 w-5" />
              <span>Logout</span>
            </Button>
         </SidebarFooter>
       </Sidebar>
+      
       <SidebarInset>
         <AppNavbar />
         <main className={cn(
-          "flex-1 p-4 md:p-6 lg:p-8 overflow-auto",
-          isMobile ? "pb-20" : "" // Add padding-bottom for the mobile navbar (16 for h-16 + 4 for some spacing)
+          "flex-1 p-4 md:p-6 lg:p-8 overflow-auto bg-background", // Ensure bg-background for main content area
+          isMobile ? "pb-20" : "" 
         )}>
             {children}
         </main>
@@ -101,10 +106,10 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
   );
 }
 
-
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider defaultOpen>
+    // Default open state for sidebar might need adjustment based on new design's emphasis
+    <SidebarProvider defaultOpen={false}> 
       <AppLayoutContent>{children}</AppLayoutContent>
     </SidebarProvider>
   );

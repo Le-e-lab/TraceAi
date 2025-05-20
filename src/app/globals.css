@@ -4,76 +4,101 @@
 
 @layer base {
   :root {
-    --background: 0 0% 94.1%; /* #F0F0F0 page background */
-    --foreground: 240 10% 3.9%; /* Default dark text */
+    /* Design-inspired Color Palette */
+    --background: 0 0% 97%; /* Very light gray page background */
+    --foreground: 0 0% 20%; /* Darker gray text */
+    
     --card: 0 0% 100%; /* White for cards, popovers etc. */
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 0 0% 20%;
+
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 197 71% 52%; /* #29ABE2 */
-    --primary-foreground: 210 40% 98%; /* Light text on primary */
-    --secondary: 240 4.8% 95.9%; /* Light gray for secondary elements */
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 30 100% 60%; /* #FF9933 */
-    --accent-foreground: 0 0% 10%; /* Dark text on accent for contrast */
+    --popover-foreground: 0 0% 20%;
+
+    --primary: 48 100% 50%; /* Bright Yellow #FFD100 */
+    --primary-foreground: 0 0% 15%; /* Dark text on yellow */
+
+    --secondary: 175 100% 30%; /* Teal #00998D (for buttons, active nav items) */
+    --secondary-foreground: 0 0% 100%; /* White text on teal */
+
+    --muted: 0 0% 90%; /* Lighter gray for borders, muted backgrounds */
+    --muted-foreground: 0 0% 45%; /* Muted text */
+
+    --accent: 175 80% 35%; /* Teal variant for accents if needed, can be same as secondary */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
+    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 197 71% 52%; /* Primary color for focus rings */
-    --radius: 0.5rem;
-    --chart-1: 197 71% 52%;
-    --chart-2: 30 100% 60%;
-    --chart-3: 220 50% 60%;
-    --chart-4: 0 60% 65%;
-    --chart-5: 100 50% 55%;
+    
+    --border: 0 0% 88%; /* Slightly darker border for definition */
+    --input: 0 0% 94%; /* Background for input fields */
+    --ring: 175 100% 30%; /* Teal for focus rings */
+    
+    --radius: 1rem; /* Increased border radius for rounder look */
 
+    /* Chart Colors */
+    --chart-1: 48 100% 50%; /* Yellow */
+    --chart-2: 175 100% 30%; /* Teal */
+    --chart-3: 210 80% 55%; /* A contrasting blue */
+    --chart-4: 0 70% 60%; /* A contrasting red/coral */
+    --chart-5: 260 70% 65%; /* A contrasting purple */
+
+    /* Sidebar specific colors (less emphasis as per new design) */
     --sidebar-background: 0 0% 100%; /* White sidebar */
-    --sidebar-foreground: 240 10% 3.9%;
-    --sidebar-primary: 197 71% 52%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 197 71% 90%; /* Lighter blue for sidebar accent bg */
-    --sidebar-accent-foreground: 197 71% 30%; /* Darker blue for sidebar accent text */
-    --sidebar-border: 240 5.9% 90%;
-    --sidebar-ring: 197 71% 52%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 175 100% 30%; /* Teal for active items in sidebar */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 48 100% 90%; /* Very light yellow for hover/accent bg */
+    --sidebar-accent-foreground: 48 100% 20%; /* Dark yellow for text on accent */
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 175 100% 30%;
   }
 
   .dark {
-    --background: 240 10% 3.9%; /* Dark background */
-    --foreground: 0 0% 98%; /* Light text */
-    --card: 240 5% 10%; /* Darker cards */
-    --card-foreground: 0 0% 98%;
-    --popover: 240 5% 10%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 197 71% 52%; /* #29ABE2 */
-    --primary-foreground: 210 40% 98%; /* Light text on primary */
-    --secondary: 240 3.7% 15.9%; /* Dark gray for secondary */
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 30 100% 60%; /* #FF9933 */
-    --accent-foreground: 0 0% 10%; /* Dark text on accent */
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 197 71% 52%;
-    --chart-1: 197 71% 52%;
-    --chart-2: 30 100% 60%;
-    --chart-3: 220 50% 50%;
-    --chart-4: 0 60% 55%;
-    --chart-5: 100 50% 45%;
+    /* Dark Theme - adjusted to complement the new bright theme */
+    --background: 220 15% 10%; /* Dark blue-gray */
+    --foreground: 0 0% 95%;
+    
+    --card: 220 15% 15%; 
+    --card-foreground: 0 0% 95%;
 
-    --sidebar-background: 240 8% 6%; /* Very dark sidebar */
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 197 71% 52%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 197 71% 20%; /* Darker blue for dark sidebar accent bg */
-    --sidebar-accent-foreground: 197 71% 80%; /* Lighter blue for dark sidebar accent text */
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 197 71% 52%;
+    --popover: 220 15% 15%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 48 100% 55%; /* Slightly brighter Yellow for dark mode */
+    --primary-foreground: 0 0% 10%; 
+
+    --secondary: 175 100% 35%; /* Slightly brighter Teal for dark mode */
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 220 15% 20%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 175 90% 40%; 
+    --accent-foreground: 0 0% 98%;
+    
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 220 15% 25%;
+    --input: 220 15% 22%;
+    --ring: 175 100% 35%;
+    
+    /* Chart Colors Dark */
+    --chart-1: 48 100% 55%;
+    --chart-2: 175 100% 35%;
+    --chart-3: 210 70% 60%;
+    --chart-4: 0 60% 60%;
+    --chart-5: 260 60% 70%;
+
+    /* Sidebar specific colors dark */
+    --sidebar-background: 220 15% 12%; 
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 175 100% 35%; 
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 48 100% 20%; 
+    --sidebar-accent-foreground: 48 100% 80%; 
+    --sidebar-border: 220 15% 25%;
+    --sidebar-ring: 175 100% 35%;
   }
 }
 
@@ -83,5 +108,9 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-geist-sans), sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
   }
 }

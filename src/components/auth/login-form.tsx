@@ -53,15 +53,15 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel className="text-xs">Email Address</FormLabel>
               <FormControl>
-                <Input placeholder="you@example.com" {...field} />
+                <Input placeholder="you@example.com" {...field} className="bg-input text-sm"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -72,48 +72,48 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-xs">Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} />
+                <Input type="password" placeholder="••••••••" {...field} className="bg-input text-sm"/>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormItem>
-          <FormLabel>Select Your Role</FormLabel>
+        <FormItem className="pt-2">
+          <FormLabel className="text-xs">Select Your Role</FormLabel>
           <RadioGroup
             onValueChange={(value) => setSelectedRole(value as UserRole)}
             defaultValue={selectedRole}
-            className="flex space-x-4 pt-2"
+            className="flex space-x-4 pt-1"
           >
             <FormItem className="flex items-center space-x-2">
               <FormControl>
                 <RadioGroupItem value="public" id="role-public" />
               </FormControl>
-              <FormLabel htmlFor="role-public" className="font-normal">Public User</FormLabel>
+              <FormLabel htmlFor="role-public" className="font-normal text-xs">Public User</FormLabel>
             </FormItem>
             <FormItem className="flex items-center space-x-2">
               <FormControl>
                 <RadioGroupItem value="healthcare_worker" id="role-healthcare" />
               </FormControl>
-              <FormLabel htmlFor="role-healthcare" className="font-normal">Healthcare Worker</FormLabel>
+              <FormLabel htmlFor="role-healthcare" className="font-normal text-xs">Healthcare Worker</FormLabel>
             </FormItem>
           </RadioGroup>
         </FormItem>
 
-        <Button type="submit" className="w-full" disabled={authLoading}>
+        <Button type="submit" className="w-full !mt-6 bg-secondary text-secondary-foreground hover:bg-secondary/90" disabled={authLoading}>
           {authLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <LogIn className="mr-2 h-4 w-4" />
           )}
-          Login
+          Login to TraceWise
         </Button>
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-xs text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="font-medium text-primary hover:underline">
-            Sign up
+          <Link href="/signup" className="font-medium text-secondary hover:underline">
+            Sign up here
           </Link>
         </p>
       </form>

@@ -1,17 +1,20 @@
 
 import { SignupForm } from "@/components/auth/signup-form";
-import { CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function SignupPage() {
   return (
     <>
-      <CardHeader className="text-center">
-        <CardTitle className="text-3xl">Create an Account</CardTitle>
-        <CardDescription>
-          Join TraceWise to help keep our community safe.
+      <CardHeader className="text-center p-0 mb-6">
+        <CardTitle className="text-3xl font-bold text-foreground">Create Your Account</CardTitle>
+        <CardDescription className="text-muted-foreground">
+          Join TraceWise and contribute to a safer community.
         </CardDescription>
       </CardHeader>
       <SignupForm />
+      <p className="mt-6 text-center text-xs text-muted-foreground">
+        By creating an account, you agree to our Terms & Conditions.
+      </p>
     </>
   );
 }
