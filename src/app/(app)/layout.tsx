@@ -4,7 +4,7 @@
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter, usePathname } from "next/navigation";
 import React, { useEffect } from "react";
-import { Loader2, LogOut, Settings } from "lucide-react"; // Added Settings
+import { Loader2, LogOut, User } from "lucide-react"; // Changed Settings to User
 import { AppNavbar } from "@/components/shared/app-navbar";
 import { getFilteredNavLinks } from "@/components/shared/nav-links";
 import Link from "next/link";
@@ -81,9 +81,9 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
         </SidebarContent>
         <SidebarFooter className="p-2">
           <Separator className="my-2 bg-sidebar-border" />
-           <Button variant="ghost" onClick={() => router.push('/settings')} className="w-full justify-start gap-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-             <Settings className="h-5 w-5" />
-             <span>Settings</span>
+           <Button variant="ghost" onClick={() => router.push('/profile')} className="w-full justify-start gap-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+             <User className="h-5 w-5" /> {/* Changed to User icon */}
+             <span>Profile</span> {/* Changed label to Profile */}
            </Button>
            <Button variant="ghost" onClick={logout} className="w-full justify-start gap-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
              <LogOut className="h-5 w-5" />

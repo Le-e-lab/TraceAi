@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Settings, Moon, Sun, ChevronLeft, Bell } from "lucide-react"; // Added Bell
+import { User, ChevronLeft, Bell } from "lucide-react"; // Changed Settings to User
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
@@ -16,7 +16,6 @@ import { usePathname, useRouter } from "next/navigation";
 export function AppNavbar() {
   const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState('light');
   const { isMobile } = useSidebar();
   const pathname = usePathname();
   const router = useRouter();
@@ -25,68 +24,55 @@ export function AppNavbar() {
 
   useEffect(() => {
     setMounted(true);
-    // Initialize theme based on system preference or saved choice
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-    setCurrentTheme(initialTheme);
-    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+    // Ensure light theme is applied by default (dark class is not added)
+    document.documentElement.classList.remove('dark');
+    localStorage.removeItem('theme'); // Remove any saved theme preference
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    setCurrentTheme(newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-    localStorage.setItem('theme', newTheme); // Save theme preference
-  };
-
   if (!mounted) {
+    // Basic skeleton to prevent layout shift, matches new blended style
     return (
-      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-primary px-4 md:px-6">
+      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
          <div className="flex items-center gap-2">
             <div className="h-10 w-10 lg:hidden" /> 
-            <span className="text-xl font-bold text-primary-foreground">TraceWise</span>
+            <span className="text-xl font-bold text-primary">TraceWise</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-primary-foreground/20" />
-            <div className="h-8 w-8 rounded-full bg-primary-foreground/20" />
-             <div className="h-8 w-8 rounded-full bg-primary-foreground/20" />
+            <div className="h-8 w-8 rounded-full bg-muted" />
+            <div className="h-8 w-8 rounded-full bg-muted" />
           </div>
       </header>
     );
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-primary/20 bg-primary shadow-sm">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
           {showBackButton ? (
-            <Button variant="ghost" size="icon" onClick={() => router.back()} className="text-primary-foreground hover:bg-primary-foreground/10">
+            <Button variant="ghost" size="icon" onClick={() => router.back()} className="text-foreground hover:bg-accent">
               <ChevronLeft className="h-6 w-6" />
             </Button>
           ) : (
             <SidebarTrigger className={cn(
-              "text-primary-foreground hover:bg-primary-foreground/10",
+              "text-foreground hover:bg-accent", // Adjusted for bg-background
               "hidden", 
               "md:block", 
               "lg:hidden" 
             )} />
           )}
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-primary-foreground">
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-primary">
             TraceWise
           </Link>
         </div>
 
         <div className="flex items-center gap-1 md:gap-2">
-          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme" className="text-primary-foreground hover:bg-primary-foreground/10">
-            {currentTheme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-          </Button>
-          {/* Notification Icon */}
-          <Button variant="ghost" size="icon" aria-label="Notifications" className="text-primary-foreground hover:bg-primary-foreground/10">
+          {/* Dark mode toggle removed */}
+          <Button variant="ghost" size="icon" aria-label="Notifications" className="text-foreground hover:bg-accent">
             <Bell className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon" aria-label="Settings" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => router.push('/settings')}>
-            <Settings className="h-5 w-5" />
+          <Button variant="ghost" size="icon" aria-label="Profile" className="text-foreground hover:bg-accent" onClick={() => router.push('/profile')}>
+            <User className="h-5 w-5" />
           </Button>
         </div>
       </div>
