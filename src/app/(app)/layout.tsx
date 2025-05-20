@@ -81,7 +81,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
         </SidebarContent>
         <SidebarFooter className="p-2">
           <Separator className="my-2 bg-sidebar-border" />
-           <Button variant="ghost" onClick={() => { router.push('/settings_placeholder') /* TODO: Implement actual settings page/modal */}} className="w-full justify-start gap-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+           <Button variant="ghost" onClick={() => router.push('/settings')} className="w-full justify-start gap-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
              <Settings className="h-5 w-5" />
              <span>Settings</span>
            </Button>

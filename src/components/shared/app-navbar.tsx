@@ -85,7 +85,7 @@ export function AppNavbar() {
           <Button variant="ghost" size="icon" aria-label="Notifications" className="text-primary-foreground hover:bg-primary-foreground/10">
             <Bell className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon" aria-label="Settings" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => router.push('/settings_placeholder')}>
+          <Button variant="ghost" size="icon" aria-label="Settings" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => router.push('/settings')}>
             <Settings className="h-5 w-5" />
           </Button>
         </div>
