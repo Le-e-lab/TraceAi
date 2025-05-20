@@ -1,6 +1,6 @@
 
 import type { UserRole } from "@/contexts/auth-context";
-import { LayoutGrid, CalendarCheck2, MessageSquare, Newspaper, BarChart3, Settings, Users } from "lucide-react";
+import { Home, CalendarCheck2, MessageSquare, Newspaper, BarChart3, MapPin, Users } from "lucide-react"; // Added Home, MapPin
 import type { LucideIcon } from "lucide-react";
 
 export interface NavLink {
@@ -15,8 +15,8 @@ export interface NavLink {
 export const navLinks: NavLink[] = [
   {
     href: "/dashboard",
-    label: "Overview",
-    icon: LayoutGrid,
+    label: "Home", // Changed from "Overview"
+    icon: Home,    // Changed from LayoutGrid
     roles: ["public", "healthcare_worker"],
     tooltip: "Your current status and overview.",
   },
@@ -26,6 +26,13 @@ export const navLinks: NavLink[] = [
     icon: CalendarCheck2,
     roles: ["public", "healthcare_worker"],
     tooltip: "Log your symptoms or health status.",
+  },
+  {
+    href: "/exposure", // New Exposure link
+    label: "Exposure",
+    icon: MapPin,
+    roles: ["public", "healthcare_worker"],
+    tooltip: "View potential exposure areas and contacts.",
   },
   {
     href: "/news",
@@ -44,7 +51,7 @@ export const navLinks: NavLink[] = [
   {
     href: "/admin",
     label: "Analytics",
-    icon: BarChart3, 
+    icon: BarChart3,
     roles: ["healthcare_worker"],
     tooltip: "Monitor regional data and insights.",
   },
