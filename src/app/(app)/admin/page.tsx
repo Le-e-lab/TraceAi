@@ -26,14 +26,18 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="container mx-auto py-2">
-       <div className="mb-6">
+    // container and py-2 removed to allow content to fill more space like in the image
+    <div className="w-full"> 
+       <div className="mb-4 px-1"> {/* Added slight padding for the title if needed */}
+        {/* Title is more integrated into the new design via IndividualHeader */}
+        {/* 
         <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Admin Dashboard
+          Case Overview
         </h1>
         <p className="text-muted-foreground">
-          Real-time monitoring and insights for health authorities.
-        </p>
+          Detailed view of the selected individual and related information.
+        </p> 
+        */}
       </div>
       <AdminDashboardContent userRole={user?.role} />
     </div>

@@ -1,43 +1,89 @@
 
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, LineChart, PieChart } from 'recharts'; // Ensure recharts is installed
-import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import { Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Pie, Cell } from 'recharts';
-import { MockHeatmap } from "./mock-heatmap";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle, TrendingUp, Users, MapPin } from "lucide-react";
 import type { UserRole } from "@/contexts/auth-context";
+import { AlertTriangle, Loader2, PlusCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { AdminDashboardData } from "@/types/admin-dashboard";
 
-const riskLevelData = [
-  { name: 'Region A', low: 400, medium: 240, high: 100 },
-  { name: 'Region B', low: 300, medium: 139, high: 210 },
-  { name: 'Region C', low: 200, medium: 480, high: 50 },
-  { name: 'Region D', low: 278, medium: 390, high: 150 },
-  { name: 'Region E', low: 189, medium: 200, high: 300 },
-];
+import { IndividualHeader } from "./individual-header";
+import { OverviewTasks } from "./overview-tasks";
+import { OverviewExposureHistory } from "./overview-exposure-history";
+import { OverviewRecommendations } from "./overview-recommendations";
+import { OverviewCaseNotes } from "./overview-case-notes";
+import { Button } from "@/components/ui/button";
 
-const overallRiskData = [
-  { name: 'Low Risk', value: 45, fill: 'var(--chart-1)' }, // Using HSL vars from globals.css via ui/chart
-  { name: 'Medium Risk', value: 35, fill: 'var(--chart-2)' },
-  { name: 'High Risk', value: 20, fill: 'var(--chart-4)' }, // chart-4 for destructive-like color
-];
-const chartConfig = {
-  low: { label: "Low", color: "hsl(var(--chart-1))" },
-  medium: { label: "Medium", color: "hsl(var(--chart-2))" },
-  high: { label: "High", color: "hsl(var(--chart-4))" }, // Mapped to a destructive-like color from theme
-  value: { label: "Individuals" }
+// Mock Data Generation (should ideally be fetched from an API)
+const generateMockData = (): AdminDashboardData => {
+  const today = new Date();
+  const formatDate = (date: Date) => date.toLocaleDateString('en-US');
+
+  return {
+    selectedIndividual: {
+      id: "ind-001",
+      name: "Stephan Bastian", // From image
+      avatarUrl: "https://placehold.co/100x100.png",
+      avatarFallback: "SB",
+      dateOfBirth: "08/04/1959", // From image
+      age: 64, // Calculated from DOB
+      gender: "Male",
+      traceWiseId: "MRN 456789", // From image
+      phone: "(701) 293-4945", // From image
+      address: "900 Oak Ridge CIR, Brighton, MI 48116", // From image
+      contactSource: "Health Clinic Referral", // Analogous to "SafeLife BlueShield" / "Mayo Clinic" practice
+      assignedHealthOfficer: "Dr. Dawn Baker", // From image (PCP)
+      overallRiskLevel: "medium", // From image "Moderate"
+      riskFactors: { // From image
+        clinical: "medium", 
+        dda: "high" 
+      },
+      recentContactLogCount: 6, // From image "Clinical Enrolled Programs 6"
+      statusNotes: ["Requires follow-up for recent travel history.", "Vaccination status pending verification."], // From image "Patient Notes 6"
+    },
+    openTasks: [
+      { id: "task-1", title: "Additional Info needed", dueDate: formatDate(new Date(today.setDate(today.getDate() + 2))), status: "In Progress", description: "Gather travel history for the last 14 days.", actionLabel: "Add Info", assignedTo: "Admin User"},
+      { id: "task-2", title: "Contact Tracing Review", dueDate: formatDate(new Date(today.setDate(today.getDate() + 3))), status: "Pending", description: "Review new contacts reported by the individual.", actionLabel: "Review Contacts", assignedTo: "Jane Doe"},
+      { id: "task-3", title: "Testing Follow-up", dueDate: formatDate(new Date(today.setDate(today.getDate() + 1))), status: "Needs Review", description: "Confirm if COVID-19 test was scheduled and results received.", actionLabel: "Update Status", assignedTo: "Admin User"},
+    ],
+    exposureHistory: [
+      { id: "exp-1", eventType: "Location Visit", locationName: "Downtown Grocery Store", facilityType: "Retail", exposureDate: "10/25/2023", status: "Verified" },
+      { id: "exp-2", eventType: "Close Contact", locationName: "Friend's Gathering", facilityType: "Residential", exposureDate: "10/22/2023", status: "Unverified" },
+      { id: "exp-3", eventType: "Workplace Exposure", locationName: "Office Building - Floor 3", facilityType: "Commercial", exposureDate: "10/20/2023", status: "Under Investigation" },
+      { id: "exp-4", eventType: "Location Visit", locationName: "Central City Park", facilityType: "Outdoor", exposureDate: "10/18/2023", status: "Auto-Logged"},
+    ],
+    recommendedActions: [
+      { id: "act-1", actionName: "10-Day Self-Quarantine", startDate: formatDate(new Date(today.setDate(today.getDate() - 5))), reason: "High-Risk Exposure", details: "Monitor for symptoms daily. Avoid contact with others. Test on day 5 post-exposure.", duration: "10 days" },
+      { id: "act-2", actionName: "PCR Test Recommended", startDate: formatDate(today), reason: "Symptom Onset", details: "Schedule a PCR test at the nearest facility. Isolate until results are negative.", duration: "Until Result"},
+    ],
+    caseNotes: [
+      { id: "note-1", noteType: "General Update", status: "Active", date: formatDate(new Date(today.setDate(today.getDate() - 2))), details: "Individual reported mild cough, advised to monitor.", author: "Dr. Smith" },
+      { id: "note-2", noteType: "Intervention", status: "Referred", date: formatDate(today), details: "Referred to local public health for welfare check due to prolonged isolation.", author: "Support Team"},
+    ],
+  };
 };
+
 
 interface AdminDashboardContentProps {
   userRole: UserRole | undefined | null;
 }
 
 export function AdminDashboardContent({ userRole }: AdminDashboardContentProps) {
+  const [data, setData] = useState<AdminDashboardData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate data fetching
+    setIsLoading(true);
+    setTimeout(() => {
+      setData(generateMockData());
+      setIsLoading(false);
+    }, 500); // Simulate network delay
+  }, []);
+
+
   if (userRole !== 'healthcare_worker') {
     return (
-      <div className="flex flex-col items-center justify-center h-64 p-4 text-center">
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] p-4 text-center">
         <AlertTriangle className="h-16 w-16 text-destructive mb-4" />
         <h2 className="text-2xl font-semibold text-foreground mb-2">Access Denied</h2>
         <p className="text-muted-foreground">
@@ -46,116 +92,36 @@ export function AdminDashboardContent({ userRole }: AdminDashboardContentProps) 
       </div>
     );
   }
+  
+  if (isLoading || !data) {
+    return (
+      <div className="flex h-[calc(100vh-200px)] w-full items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+         <p className="ml-3 text-muted-foreground">Loading Dashboard Data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Active Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">10,250</div>
-            <p className="text-xs text-muted-foreground">+5% from last week</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">High-Risk Zones</CardTitle>
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">+2 since yesterday</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">New Cases Reported</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">73</div>
-            <p className="text-xs text-muted-foreground">In the last 24 hours</p>
-          </CardContent>
-        </Card>
+      <IndividualHeader individual={data.selectedIndividual} />
+      
+      <div className="flex justify-end mb-4">
+        <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white">
+            <PlusCircle size={18} className="mr-2"/>
+            New Exposure/Visit
+        </Button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="shadow-lg">
-          <CardHeader>
-            <CardTitle>Regional Risk Levels</CardTitle>
-            <CardDescription>Number of individuals by risk category per region. (Mock Data)</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfig} className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={riskLevelData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip
-                    content={<ChartTooltipContent indicator="dot" />}
-                    cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
-                  />
-                  <Legend content={<ChartLegendContent />} />
-                  <Bar dataKey="low" stackId="a" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="medium" stackId="a" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="high" stackId="a" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-lg">
-          <CardHeader>
-            <CardTitle>Overall Risk Distribution</CardTitle>
-            <CardDescription>Distribution of users across risk categories. (Mock Data)</CardDescription>
-          </CardHeader>
-          <CardContent className="flex items-center justify-center">
-            <ChartContainer config={chartConfig} className="h-[300px] w-full max-w-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Tooltip content={<ChartTooltipContent hideLabel nameKey="name" />} />
-                  <Pie data={overallRiskData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} labelLine={false} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                    {overallRiskData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Pie>
-                   <Legend content={<ChartLegendContent />} />
-                </PieChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+      {/* Overview Section */}
+      <div className="space-y-6">
+        <OverviewTasks tasks={data.openTasks} />
+        <OverviewExposureHistory history={data.exposureHistory} />
+        <OverviewRecommendations actions={data.recommendedActions} />
+        <OverviewCaseNotes notes={data.caseNotes} />
       </div>
-
-      <MockHeatmap />
-
-      <Card className="shadow-lg">
-        <CardHeader>
-          <CardTitle>Alerts & Notifications</CardTitle>
-          <CardDescription>Recent important system alerts.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Alert variant="destructive">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>High Risk Spike in Region C</AlertTitle>
-            <AlertDescription>
-              A sudden increase in high-risk individuals detected in Region C. Further investigation recommended. (Mock Alert)
-            </AlertDescription>
-          </Alert>
-          <Alert>
-            <TrendingUp className="h-4 w-4" />
-            <AlertTitle>Increased Symptom Reporting</AlertTitle>
-            <AlertDescription>
-              Symptom reporting rates are up by 15% system-wide in the last 48 hours. (Mock Alert)
-            </AlertDescription>
-          </Alert>
-        </CardContent>
-      </Card>
+      
+      {/* Removed old charts and summary cards */}
     </div>
   );
 }

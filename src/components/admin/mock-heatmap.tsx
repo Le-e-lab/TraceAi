@@ -4,6 +4,8 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export function MockHeatmap() {
+  // This component is currently not used in the new admin dashboard design.
+  // It can be repurposed or removed later.
   return (
     <Card className="shadow-lg">
       <CardHeader>
@@ -12,9 +14,8 @@ export function MockHeatmap() {
       </CardHeader>
       <CardContent>
         <div className="aspect-video w-full overflow-hidden rounded-md border bg-muted">
-          {/* Placeholder for heatmap - using a placeholder image */}
           <Image
-            src="https://placehold.co/800x450.png" // A generic placeholder
+            src="https://placehold.co/800x450.png"
             alt="Mock Heatmap"
             width={800}
             height={450}
