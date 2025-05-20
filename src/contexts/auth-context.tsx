@@ -47,6 +47,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (credentials: LoginData, role: UserRole) => {
     setIsLoading(true);
+    
+    if (role === 'healthcare_worker' && !credentials.email.endsWith('@traceworker.com')) {
+      setIsLoading(false);
+      throw new Error("Healthcare worker email must end with @traceworker.com");
+    }
+
     // Mock API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     const loggedInUser: User = { id: Date.now().toString(), email: credentials.email, role };
@@ -59,6 +65,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Updated signup to accept role as a parameter
   const signup = async (details: SignupData, role: UserRole) => {
     setIsLoading(true);
+
+    if (role === 'healthcare_worker' && !details.email.endsWith('@traceworker.com')) {
+      setIsLoading(false);
+      throw new Error("Healthcare worker email must end with @traceworker.com for signup.");
+    }
+
     // Mock API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     // 'role' now comes from the parameter, not details.role
