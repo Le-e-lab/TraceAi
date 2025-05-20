@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Design-inspired Color Palette */
+    /* New Blue Theme Color Palette */
     --background: 0 0% 97%; /* Very light gray page background */
     --foreground: 0 0% 20%; /* Darker gray text */
     
@@ -14,8 +14,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 20%;
 
-    --primary: 48 100% 50%; /* Bright Yellow #FFD100 */
-    --primary-foreground: 0 0% 15%; /* Dark text on yellow */
+    --primary: 217 91% 60%; /* Vibrant Blue (e.g., Tailwind blue-500 #3B82F6) */
+    --primary-foreground: 0 0% 100%; /* White text on blue */
 
     --secondary: 175 100% 30%; /* Teal #00998D (for buttons, active nav items) */
     --secondary-foreground: 0 0% 100%; /* White text on teal */
@@ -35,26 +35,26 @@
     
     --radius: 1rem; /* Increased border radius for rounder look */
 
-    /* Chart Colors */
-    --chart-1: 48 100% 50%; /* Yellow */
+    /* Chart Colors - Adjusted for blue theme */
+    --chart-1: 190 80% 60%; /* Cyan/Light Blue */
     --chart-2: 175 100% 30%; /* Teal */
     --chart-3: 210 80% 55%; /* A contrasting blue */
     --chart-4: 0 70% 60%; /* A contrasting red/coral */
     --chart-5: 260 70% 65%; /* A contrasting purple */
 
-    /* Sidebar specific colors (less emphasis as per new design) */
+    /* Sidebar specific colors - Adjusted for blue theme */
     --sidebar-background: 0 0% 100%; /* White sidebar */
     --sidebar-foreground: 0 0% 20%;
     --sidebar-primary: 175 100% 30%; /* Teal for active items in sidebar */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 48 100% 90%; /* Very light yellow for hover/accent bg */
-    --sidebar-accent-foreground: 48 100% 20%; /* Dark yellow for text on accent */
+    --sidebar-accent: 217 91% 92%; /* Very light blue for hover/accent bg */
+    --sidebar-accent-foreground: 217 91% 30%; /* Darker blue for text on accent */
     --sidebar-border: 0 0% 90%;
     --sidebar-ring: 175 100% 30%;
   }
 
   .dark {
-    /* Dark Theme - adjusted to complement the new bright theme */
+    /* Dark Theme - adjusted to complement the new blue theme */
     --background: 220 15% 10%; /* Dark blue-gray */
     --foreground: 0 0% 95%;
     
@@ -64,7 +64,7 @@
     --popover: 220 15% 15%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 48 100% 55%; /* Slightly brighter Yellow for dark mode */
+    --primary: 217 91% 65%; /* Slightly brighter Blue for dark mode */
     --primary-foreground: 0 0% 10%; 
 
     --secondary: 175 100% 35%; /* Slightly brighter Teal for dark mode */
@@ -84,7 +84,7 @@
     --ring: 175 100% 35%;
     
     /* Chart Colors Dark */
-    --chart-1: 48 100% 55%;
+    --chart-1: 190 80% 65%;
     --chart-2: 175 100% 35%;
     --chart-3: 210 70% 60%;
     --chart-4: 0 60% 60%;
@@ -95,8 +95,8 @@
     --sidebar-foreground: 0 0% 95%;
     --sidebar-primary: 175 100% 35%; 
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 48 100% 20%; 
-    --sidebar-accent-foreground: 48 100% 80%; 
+    --sidebar-accent: 217 91% 25%; 
+    --sidebar-accent-foreground: 217 91% 85%; 
     --sidebar-border: 220 15% 25%;
     --sidebar-ring: 175 100% 35%;
   }
