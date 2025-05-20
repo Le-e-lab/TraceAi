@@ -27,7 +27,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="space-y-6 lg:col-span-1">
-          <Card className="shadow-md">
+          <Card className="shadow-md hidden md:block">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
               <CardDescription>Access important features quickly.</CardDescription>
