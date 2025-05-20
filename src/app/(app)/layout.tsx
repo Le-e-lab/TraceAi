@@ -19,15 +19,18 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   SidebarInset,
-  SidebarTrigger, // Added this import
+  useSidebar, // Import useSidebar to get isMobile status
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { MobileBottomNavbar } from "@/components/shared/mobile-bottom-navbar";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+// Inner component to access useSidebar context
+function AppLayoutContent({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const { isMobile } = useSidebar(); // Get isMobile from context
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -46,11 +49,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const filteredLinks = getFilteredNavLinks(user.role);
 
   return (
-    <SidebarProvider defaultOpen>
+    <>
       <Sidebar 
         variant="sidebar" 
         collapsible="icon" 
-        className="border-r"
+        className="border-r" // This sidebar will be hidden on small mobile by its internal logic
       >
         <SidebarHeader className="p-4">
           {/* Sidebar header content if needed, like a logo or app name for collapsed view */}
@@ -86,10 +89,23 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <AppNavbar />
-        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto">
+        <main className={cn(
+          "flex-1 p-4 md:p-6 lg:p-8 overflow-auto",
+          isMobile ? "pb-20" : "" // Add padding-bottom for the mobile navbar (16 for h-16 + 4 for some spacing)
+        )}>
             {children}
         </main>
       </SidebarInset>
+      <MobileBottomNavbar navLinks={filteredLinks} />
+    </>
+  );
+}
+
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider defaultOpen>
+      <AppLayoutContent>{children}</AppLayoutContent>
     </SidebarProvider>
   );
 }

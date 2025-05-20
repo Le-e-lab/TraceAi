@@ -14,31 +14,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useTheme } from "next-themes"; // Assuming next-themes is or will be installed
+// import { useTheme } from "next-themes"; // Assuming next-themes is or will be installed
 import { useEffect, useState } from "react";
 import {
   SidebarTrigger,
+  useSidebar, // Import useSidebar
 } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
-
-// If next-themes is not installed, run: npm install next-themes
-// Add ThemeProvider in src/app/layout.tsx if not already there.
-// For this MVP, I'll mock theme toggling if next-themes isn't set up.
 
 export function AppNavbar() {
   const { user, logout } = useAuth();
   const [mounted, setMounted] = useState(false);
   // const { theme, setTheme } = useTheme(); // Placeholder if next-themes is not set up
   const [currentTheme, setCurrentTheme] = useState('light');
+  const { isMobile } = useSidebar(); // Get isMobile from context
 
 
   useEffect(() => {
     setMounted(true);
-    // If using next-themes, this would be handled by it.
-    // For now, let's try to get system preference.
     const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     setCurrentTheme(preferredTheme);
-    // Apply to html tag for basic dark mode if not using next-themes provider
     document.documentElement.classList.toggle('dark', preferredTheme === 'dark');
   }, []);
 
@@ -46,29 +42,47 @@ export function AppNavbar() {
   const toggleTheme = () => {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     setCurrentTheme(newTheme);
-    // if (setTheme) setTheme(newTheme); // Use if next-themes is set up
      document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
 
   if (!mounted) {
+    // Basic skeleton to prevent layout shifts and hydration errors
     return (
-      <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-card px-4 md:px-6">
+      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-card px-4 md:px-6">
          <div className="flex items-center gap-2">
-            <SidebarTrigger className="md:hidden" />
+            {/* Placeholder for trigger to avoid layout shift if it were visible */}
+            <div className="h-10 w-10 lg:hidden" /> 
             <Link href="/" className="flex items-center gap-2 font-semibold text-primary">
               <ActivitySquare className="h-6 w-6" />
               <span className="text-lg">TraceWise</span>
             </Link>
           </div>
+          <div className="flex items-center gap-4">
+            <div className="h-10 w-10 rounded-full" />
+            <div className="h-10 w-10 rounded-full" />
+            <div className="h-9 w-9 rounded-full" />
+          </div>
       </header>
-    ); // Avoid hydration mismatch
+    );
   }
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-card shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
-          <SidebarTrigger className="lg:hidden" /> {/* Hidden on lg and up, shown on md and sm */}
+          {/* 
+            SidebarTrigger logic:
+            - Hidden on small screens (sm) because MobileBottomNavbar is primary.
+            - Visible on medium screens (md) to trigger the Sheet sidebar.
+            - Hidden on large screens (lg) because full Sidebar is visible.
+          */}
+          <SidebarTrigger className={cn(
+            "hidden", // Default hidden
+            "md:block", // Visible on md
+            "lg:hidden"  // Hidden on lg (desktop sidebar takes over)
+            // Implicitly hidden on sm because md:block is more specific than a general 'block'
+            // and isMobile check in MobileBottomNavbar handles sm
+          )} />
           <Link href="/" className="flex items-center gap-2 font-semibold text-primary">
             <ActivitySquare className="h-6 w-6" />
             <span className="text-lg">TraceWise</span>
