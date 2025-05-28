@@ -29,10 +29,7 @@ export default function HomePage() {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center bg-background space-y-6">
       <TraceAiLogo className="h-24 w-auto text-primary" />
-      <div className="flex items-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="ml-4 text-xl font-medium text-foreground">Loading TraceAI...</p>
-      </div>
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
     </div>
   );
 }
