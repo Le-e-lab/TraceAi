@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge"; // Added import
 import { MapPin as HotspotIcon, Building, TestTube2, AlertTriangle, Flame } from "lucide-react";
 import type { Hotspot, MedicalResource } from "@/types/admin-dashboard";
 import Image from "next/image";
@@ -154,3 +155,4 @@ export function HotspotMappingPanel() {
     </div>
   );
 }
+
