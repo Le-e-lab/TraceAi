@@ -5,7 +5,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TrendingUp, TrendingDown, Minus, Users, Activity, AlertTriangle, BarChart, Map, ShieldAlert } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Users, Activity, AlertTriangle, BarChart, Map, ShieldAlert, LayoutDashboard } from "lucide-react"; // Added LayoutDashboard
 import type { OverviewMetric } from "@/types/admin-dashboard";
 import Image from "next/image";
 import { useState, useEffect } from "react";
