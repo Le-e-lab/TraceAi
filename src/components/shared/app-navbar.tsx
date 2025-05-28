@@ -21,7 +21,7 @@ export function AppNavbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const showBackButton = !["/dashboard", "/admin"].includes(pathname) && isMobile;
+  const showBackButton = !["/dashboard", "/admin", "/notifications", "/profile"].includes(pathname) && isMobile;
 
   useEffect(() => {
     setMounted(true);
@@ -67,7 +67,7 @@ export function AppNavbar() {
         </div>
 
         <div className="flex items-center gap-1 md:gap-2">
-          <Button variant="ghost" size="icon" aria-label="Notifications" className="text-foreground hover:bg-accent">
+          <Button variant="ghost" size="icon" aria-label="Notifications" className="text-foreground hover:bg-accent" onClick={() => router.push('/notifications')}>
             <Bell className="h-5 w-5" />
           </Button>
           <Button variant="ghost" size="icon" aria-label="Profile" className="text-foreground hover:bg-accent" onClick={() => router.push('/profile')}>
@@ -78,3 +78,4 @@ export function AppNavbar() {
     </header>
   );
 }
+
