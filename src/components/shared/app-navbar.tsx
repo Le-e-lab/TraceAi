@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { User, ChevronLeft, Bell } from "lucide-react"; // Changed Settings to User
+import { User, ChevronLeft, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
+import { TraceAiLogo } from "./trace-ai-logo"; // Import the logo
 
 export function AppNavbar() {
   const { user } = useAuth();
@@ -24,18 +25,16 @@ export function AppNavbar() {
 
   useEffect(() => {
     setMounted(true);
-    // Ensure light theme is applied by default (dark class is not added)
     document.documentElement.classList.remove('dark');
-    localStorage.removeItem('theme'); // Remove any saved theme preference
+    localStorage.removeItem('theme'); 
   }, []);
 
   if (!mounted) {
-    // Basic skeleton to prevent layout shift, matches new blended style
     return (
       <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
          <div className="flex items-center gap-2">
             <div className="h-10 w-10 lg:hidden" /> 
-            <span className="text-xl font-bold text-primary">TraceWise</span>
+            <TraceAiLogo className="h-8 w-auto"/>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-full bg-muted" />
@@ -55,19 +54,19 @@ export function AppNavbar() {
             </Button>
           ) : (
             <SidebarTrigger className={cn(
-              "text-foreground hover:bg-accent", // Adjusted for bg-background
+              "text-foreground hover:bg-accent", 
               "hidden", 
               "md:block", 
               "lg:hidden" 
             )} />
           )}
           <Link href="/" className="flex items-center gap-2 text-xl font-bold text-primary">
-            TraceWise
+             <TraceAiLogo className="h-8 w-auto hidden sm:block"/>
+             <span className="sm:hidden text-xl font-bold text-primary">TraceAI</span> {/* Show text on small mobile */}
           </Link>
         </div>
 
         <div className="flex items-center gap-1 md:gap-2">
-          {/* Dark mode toggle removed */}
           <Button variant="ghost" size="icon" aria-label="Notifications" className="text-foreground hover:bg-accent">
             <Bell className="h-5 w-5" />
           </Button>

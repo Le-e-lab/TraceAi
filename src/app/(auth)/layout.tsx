@@ -1,5 +1,5 @@
 
-import { ActivitySquare } from "lucide-react"; // Keep for now, might remove
+import { TraceAiLogo } from "@/components/shared/trace-ai-logo";
 import Image from "next/image";
 
 export default function AuthLayout({
@@ -13,8 +13,8 @@ export default function AuthLayout({
       <div className="absolute -bottom-1/4 left-0 w-full h-1/2 bg-primary/5 rounded-t-full opacity-50 transform scale-x-150"></div>
       
       <div className="z-10 mb-8 flex flex-col items-center space-y-2">
-        {/* <ActivitySquare size={40} className="text-primary"/> */}
-        <h1 className="text-5xl font-bold tracking-tight text-primary">TraceWise</h1>
+        <TraceAiLogo className="h-20 w-auto text-primary mb-2"/>
+        <h1 className="text-5xl font-bold tracking-tight text-primary">TraceAI</h1>
         <p className="text-lg text-center text-muted-foreground">
           Stay Informed, Stay Safe.
         </p>

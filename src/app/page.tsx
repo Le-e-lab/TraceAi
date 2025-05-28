@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { TraceAiLogo } from '@/components/shared/trace-ai-logo'; // Import the logo
 
 export default function HomePage() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -13,17 +14,25 @@ export default function HomePage() {
   useEffect(() => {
     if (!isLoading) {
       if (isAuthenticated && user) {
-        router.replace(user.role === 'healthcare_worker' ? '/admin' : '/dashboard');
+        // Optional: add a slight delay for splash screen visibility
+        setTimeout(() => {
+            router.replace(user.role === 'healthcare_worker' ? '/admin' : '/dashboard');
+        }, 500); // 0.5 second delay
       } else {
-        router.replace('/login');
+         setTimeout(() => {
+            router.replace('/login');
+         }, 500);
       }
     }
   }, [isAuthenticated, isLoading, user, router]);
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-background">
-      <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      <p className="ml-4 text-lg text-foreground">Loading TraceWise...</p>
+    <div className="flex h-screen w-full flex-col items-center justify-center bg-background space-y-6">
+      <TraceAiLogo className="h-24 w-auto text-primary" />
+      <div className="flex items-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-4 text-xl font-medium text-foreground">Loading TraceAI...</p>
+      </div>
     </div>
   );
 }

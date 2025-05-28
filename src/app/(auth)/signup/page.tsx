@@ -9,7 +9,7 @@ export default function SignupPage() {
       <CardHeader className="text-center p-0 mb-6">
         <CardTitle className="text-3xl font-bold text-foreground">Create Your Account</CardTitle>
         <CardDescription className="text-muted-foreground">
-          Join TraceWise and contribute to a safer community.
+          Join TraceAI and contribute to a safer community.
         </CardDescription>
       </CardHeader>
        {/* Optional: Small illustration for visual consistency */}

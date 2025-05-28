@@ -37,7 +37,7 @@ export function LoginForm() {
       await login(data, role);
       toast({
         title: "Login Successful",
-        description: `Welcome back to TraceWise!`,
+        description: `Welcome back to TraceAI!`,
       });
     } catch (error) {
       toast({
@@ -81,10 +81,8 @@ export function LoginForm() {
           )}
         />
         
-        {/* Role selection removed */}
-
         <Button 
-          type="button" // Change to button to prevent default form submission
+          type="button" 
           onClick={form.handleSubmit(onSubmitPublic)} 
           className="w-full !mt-6 bg-secondary text-secondary-foreground hover:bg-secondary/90" 
           disabled={authLoading}
@@ -94,11 +92,11 @@ export function LoginForm() {
           ) : (
             <LogIn className="mr-2 h-4 w-4" />
           )}
-          Login to TraceWise
+          Login to TraceAI
         </Button>
 
         <Button 
-          type="button" // Change to button
+          type="button" 
           onClick={form.handleSubmit(onSubmitHealthcare)}
           variant="outline" 
           className="w-full" 

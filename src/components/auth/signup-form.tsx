@@ -3,7 +3,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { SignupData } from "@/lib/schemas"; // SignupData will no longer have role
+import type { SignupData } from "@/lib/schemas";
 import { SignupSchema } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,22 +24,21 @@ export function SignupForm() {
   const { signup, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
 
-  const form = useForm<SignupData>({ // SignupData no longer includes role
+  const form = useForm<SignupData>({ 
     resolver: zodResolver(SignupSchema),
     defaultValues: {
       email: "",
       password: "",
       confirmPassword: "",
-      // role: "public", // Default role removed from form values
     },
   });
 
   async function handleSignup(data: SignupData, role: UserRole) {
     try {
-      await signup(data, role); // Pass role explicitly
+      await signup(data, role); 
       toast({
         title: "Signup Successful",
-        description: "Your TraceWise account has been created.",
+        description: "Your TraceAI account has been created.",
       });
     } catch (error) {
        toast({
@@ -96,7 +95,6 @@ export function SignupForm() {
             </FormItem>
           )}
         />
-        {/* Role Select removed */}
 
         <Button 
           type="button" 

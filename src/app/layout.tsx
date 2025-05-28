@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'TraceWise - AI Contact Tracing',
+  title: 'TraceAI - AI Contact Tracing',
   description: 'Enhancing Contact Tracing with AI',
 };
 
@@ -38,3 +38,4 @@ export default function RootLayout({
     </html>
   );
 }
+

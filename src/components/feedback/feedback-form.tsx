@@ -75,7 +75,7 @@ export function FeedbackForm() {
             Share Your Feedback
         </CardTitle>
         <CardDescription className="text-sm">
-          Your thoughts help us improve TraceWise. Let us know about your experience.
+          Your thoughts help us improve TraceAI. Let us know about your experience.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -150,7 +150,7 @@ export function FeedbackForm() {
 
         {sentimentResult && (
           <Alert className={cn(
-            "mt-6 rounded-lg", // Ensure consistent rounding
+            "mt-6 rounded-lg", 
             sentimentResult.score > 0.3 ? "border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400" :
             sentimentResult.score < -0.3 ? "border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400" :
             "border-yellow-500/50 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"

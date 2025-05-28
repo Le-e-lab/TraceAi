@@ -16,7 +16,7 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   login: (credentials: LoginData, role: UserRole) => Promise<void>;
-  signup: (details: SignupData, role: UserRole) => Promise<void>; // Updated signature
+  signup: (details: SignupData, role: UserRole) => Promise<void>; 
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -24,7 +24,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AUTH_STORAGE_KEY = 'traceWiseUser';
+const AUTH_STORAGE_KEY = 'traceAiUser'; // Updated storage key
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -53,7 +53,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw new Error("Healthcare worker email must end with @traceworker.com");
     }
 
-    // Mock API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     const loggedInUser: User = { id: Date.now().toString(), email: credentials.email, role };
     setUser(loggedInUser);
@@ -62,7 +61,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     router.push(loggedInUser.role === 'healthcare_worker' ? '/admin' : '/dashboard');
   };
 
-  // Updated signup to accept role as a parameter
   const signup = async (details: SignupData, role: UserRole) => {
     setIsLoading(true);
 
@@ -71,9 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw new Error("Healthcare worker email must end with @traceworker.com for signup.");
     }
 
-    // Mock API call
     await new Promise(resolve => setTimeout(resolve, 1000));
-    // 'role' now comes from the parameter, not details.role
     const newUser: User = { id: Date.now().toString(), email: details.email, role: role };
     setUser(newUser);
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newUser));

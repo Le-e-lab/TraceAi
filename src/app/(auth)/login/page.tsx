@@ -15,7 +15,7 @@ export default function LoginPage() {
   return (
     <>
       <CardHeader className="text-center p-0 mb-4">
-        <CardTitle className="text-3xl font-bold text-foreground">Welcome to TraceWise</CardTitle>
+        <CardTitle className="text-3xl font-bold text-foreground">Welcome to TraceAI</CardTitle>
         <CardDescription className="text-muted-foreground mt-1">
           Sign in to access your dashboard and help keep our community safe.
         </CardDescription>
