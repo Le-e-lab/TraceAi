@@ -8,9 +8,28 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Megaphone, Send, MessageSquare, Users2, History } from "lucide-react";
+import { Megaphone, Send, MessageSquare, Users2, History, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+
+interface SentAlertItem {
+  id: string;
+  title: string;
+  type: "Broadcast" | "Individual";
+  target: string;
+  sentAt: string;
+  status: "Sent" | "Delivered" | "Failed";
+}
+
+const mockSentAlerts: SentAlertItem[] = [
+  { id: "sa1", title: "COVID-19 Testing Site Update", type: "Broadcast", target: "All Users", sentAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), status: "Delivered" },
+  { id: "sa2", title: "Isolation Reminder", type: "Individual", target: "User_Anon_1234", sentAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), status: "Sent" },
+  { id: "sa3", title: "Flu Vaccine Availability", type: "Broadcast", target: "North Region Users", sentAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), status: "Delivered" },
+  { id: "sa4", title: "Potential Exposure Follow-up", type: "Individual", target: "User_Anon_5678", sentAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(), status: "Failed" },
+];
+
 
 export function CommunicationAlertsPanel() {
   const { toast } = useToast();
@@ -42,6 +61,12 @@ export function CommunicationAlertsPanel() {
     toast({ title: "Individual Message Sent (Mock)", description: `Message sent to User ID: ${individualMessageUserId}.` });
     setIndividualMessageUserId("");
     setIndividualMessageContent("");
+  };
+
+  const getStatusBadgeVariant = (status: SentAlertItem["status"]) => {
+    if (status === "Delivered") return "default"; // primary/success
+    if (status === "Sent") return "secondary"; // yellow/orange
+    return "destructive"; // red
   };
 
   return (
@@ -119,9 +144,30 @@ export function CommunicationAlertsPanel() {
               <CardTitle className="text-lg flex items-center gap-2"><History className="h-5 w-5"/>Sent Alerts History</CardTitle>
               <CardDescription>Log of recently sent communications.</CardDescription>
             </CardHeader>
-            <CardContent>
-                <p className="text-sm text-muted-foreground">Alert history will be displayed here. (Mock)</p>
-                {/* Placeholder for a table or list of sent alerts */}
+            <CardContent className="space-y-3">
+                {mockSentAlerts.length > 0 ? (
+                  mockSentAlerts.map(alert => (
+                    <Card key={alert.id} className="p-3 bg-muted/30 shadow-sm">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold text-sm text-foreground">{alert.title}</h4>
+                          <p className="text-xs text-muted-foreground">
+                            Type: {alert.type} | Target: {alert.target}
+                          </p>
+                        </div>
+                        <Badge variant={getStatusBadgeVariant(alert.status)} className="text-xs">{alert.status}</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Sent: {format(new Date(alert.sentAt), "MMM d, yyyy HH:mm")}
+                      </p>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="text-center py-4">
+                    <Info className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground">No alerts have been sent recently.</p>
+                  </div>
+                )}
             </CardContent>
           </Card>
 
