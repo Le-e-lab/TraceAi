@@ -2,9 +2,8 @@
 "use client";
 
 import type { UserRole } from "@/contexts/auth-context";
-import { AlertTriangle, LayoutDashboard, Network, MapPin as HotspotIcon, ClipboardList, ShieldCheck, BarChartBig, Megaphone, Users, EyeOff, Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Import panel components
 import { OverviewPanel } from "./panels/overview-panel";
@@ -19,16 +18,16 @@ import { PrivacyEthicsPanel } from "./panels/privacy-ethics-panel";
 
 interface AdminDashboardContentProps {
   userRole: UserRole | undefined | null;
+  activeTab: string; // New prop to control which panel is visible
 }
 
-export function AdminDashboardContent({ userRole }: AdminDashboardContentProps) {
-  const [isLoading, setIsLoading] = useState(true); // Simulate initial loading if needed
+export function AdminDashboardContent({ userRole, activeTab }: AdminDashboardContentProps) {
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate data fetching for the dashboard if necessary
     setTimeout(() => {
       setIsLoading(false);
-    }, 200); // Short delay
+    }, 200); 
   }, []);
 
   if (userRole !== 'healthcare_worker') {
@@ -52,38 +51,38 @@ export function AdminDashboardContent({ userRole }: AdminDashboardContentProps) 
     );
   }
 
-  const tabsConfig = [
-    { value: "overview", label: "Overview", icon: LayoutDashboard, panel: <OverviewPanel /> },
-    { value: "exposure-logs", label: "Exposure Logs", icon: Network, panel: <ExposureContactLogsPanel /> },
-    { value: "hotspot-mapping", label: "Hotspot Mapping", icon: HotspotIcon, panel: <HotspotMappingPanel /> },
-    { value: "symptom-reports", label: "Symptom Reports", icon: ClipboardList, panel: <SymptomReportsPanel /> },
-    { value: "risk-scores", label: "AI Risk Scores", icon: ShieldCheck, panel: <AIRiskScoresPanel /> },
-    { value: "analytics", label: "Analytics & Reports", icon: BarChartBig, panel: <AnalyticsReportsPanel /> },
-    { value: "communication", label: "Communication", icon: Megaphone, panel: <CommunicationAlertsPanel /> },
-    { value: "access-management", label: "Access Management", icon: Users, panel: <AccessManagementPanel /> },
-    { value: "privacy-ethics", label: "Privacy & Ethics", icon: EyeOff, panel: <PrivacyEthicsPanel /> },
-  ];
+  const renderActivePanel = () => {
+    switch (activeTab) {
+      case "overview":
+        return <OverviewPanel />;
+      case "exposure-logs":
+        return <ExposureContactLogsPanel />;
+      case "hotspot-mapping":
+        return <HotspotMappingPanel />;
+      case "symptom-reports":
+        return <SymptomReportsPanel />;
+      case "risk-scores":
+        return <AIRiskScoresPanel />;
+      case "analytics":
+        return <AnalyticsReportsPanel />;
+      case "communication":
+        return <CommunicationAlertsPanel />;
+      case "access-management":
+        return <AccessManagementPanel />;
+      case "privacy-ethics":
+        return <PrivacyEthicsPanel />;
+      default:
+        return <OverviewPanel />; // Fallback to overview
+    }
+  };
 
   return (
     <div className="space-y-6 w-full">
-      <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Healthcare Worker Dashboard</h1>
+      {/* Title is now dynamically set within each panel or removed if sidebar handles titles */}
+      {/* <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Healthcare Worker Dashboard</h1> */}
       
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9 mb-4">
-          {tabsConfig.map(tab => (
-            <TabsTrigger key={tab.value} value={tab.value} className="text-xs sm:text-sm py-2 px-1 flex items-center gap-1.5">
-              <tab.icon className="h-4 w-4" />
-              {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
-        {tabsConfig.map(tab => (
-          <TabsContent key={tab.value} value={tab.value} className="mt-0">
-            {tab.panel}
-          </TabsContent>
-        ))}
-      </Tabs>
+      {/* Tabs component removed, content is now rendered based on activeTab prop */}
+      {renderActivePanel()}
     </div>
   );
 }
