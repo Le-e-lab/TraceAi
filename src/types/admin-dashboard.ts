@@ -1,9 +1,9 @@
 
 // src/types/admin-dashboard.ts
 
-import type { UserRole } from "@/contexts/auth-context";
 import type { RiskLevel } from "@/components/dashboard/current-risk-display";
 
+// --- Old types (kept for reference or potential future use, but not central to new dashboard) ---
 export interface MonitoredIndividual {
   id: string;
   name: string;
@@ -19,11 +19,11 @@ export interface MonitoredIndividual {
   assignedHealthOfficer: string; // Analogous to PCP
   overallRiskLevel: RiskLevel; // low, medium, high
   riskFactors?: {
-    clinical?: RiskLevel; // e.g. underlying conditions impact
-    dda?: RiskLevel; // Data-driven assessment
+    clinical?: RiskLevel;
+    dda?: RiskLevel;
   };
-  statusNotes?: string[]; // Analogous to Patient Notes
-  recentContactLogCount?: number; // Analogous to Clinical Enrolled Programs
+  statusNotes?: string[];
+  recentContactLogCount?: number;
 }
 
 export interface AdminTask {
@@ -34,27 +34,27 @@ export interface AdminTask {
   assignedTo?: string;
   description?: string;
   actionLabel?: string;
-  actionLink?: string; // or an onClick handler
+  actionLink?: string;
 }
 
 export interface ExposureEvent {
   id: string;
   eventType: "Close Contact" | "Location Visit" | "Household Contact" | "Workplace Exposure";
   locationName: string;
-  facilityType?: string; // e.g., "Restaurant", "Office", "Public Transport"
+  facilityType?: string;
   exposureDate: string; // "MM/DD/YYYY"
-  endDate?: string; // "MM/DD/YYYY" (e.g. for a period of infectiousness)
-  notifiedOn?: string; // Date contacts were notified
+  endDate?: string;
+  notifiedOn?: string;
   status?: "Verified" | "Unverified" | "Auto-Logged" | "Under Investigation";
 }
 
 export interface RecommendedAction {
   id: string;
-  actionName: string; // e.g., "Self-Quarantine", "Get Tested", "Monitor Symptoms"
+  actionName: string;
   startDate: string; // "MM/DD/YYYY"
-  reason: string; // e.g., "Potential Exposure", "Symptomatic"
-  details: string; // Instructions or notes
-  duration?: string; // e.g. "14 days"
+  reason: string;
+  details: string;
+  duration?: string;
 }
 
 export interface CaseNote {
@@ -62,14 +62,130 @@ export interface CaseNote {
   noteType: "General Update" | "Escalation" | "Intervention" | "Follow-up";
   status: "Active" | "Resolved" | "Pending Review" | "Referred";
   date: string; // "MM/DD/YYYY"
-  details: string; // e.g. "Referred to local health department for testing support."
-  author?: string; // Health officer name
+  details: string;
+  author?: string;
 }
 
-export interface AdminDashboardData {
-  selectedIndividual: MonitoredIndividual;
-  openTasks: AdminTask[];
-  exposureHistory: ExposureEvent[];
-  recommendedActions: RecommendedAction[];
-  caseNotes: CaseNote[];
+// --- New types for the redesigned Healthcare Worker Dashboard ---
+
+// 1. Overview Panel
+export interface OverviewMetric {
+  id: string;
+  title: string;
+  value: string | number;
+  trend?: "up" | "down" | "stable";
+  trendValue?: string;
+  icon?: React.ElementType; // Lucide icon
+}
+
+export interface HeatmapDataPoint {
+  lat: number;
+  lng: number;
+  intensity: number;
+}
+
+export interface SentimentDataPoint {
+  date: string; // "YYYY-MM-DD"
+  score: number; // e.g., -1 to 1
+  trend: "positive" | "negative" | "neutral";
+}
+
+// 2. Exposure Contact Logs
+export interface ContactNode {
+  id: string; // User ID (anonymized/pseudonymized)
+  riskScore: RiskLevel;
+  isConfirmedCase?: boolean;
+  isSuspectedCase?: boolean;
+}
+
+export interface ContactEdge {
+  source: string; // User ID
+  target: string; // User ID
+  durationMinutes: number;
+  proximity: "close" | "near" | "far"; // Simplified
+  contactDate: string; // "YYYY-MM-DD HH:mm"
+}
+
+export interface FlaggedContact {
+  id: string;
+  contactUserId: string;
+  caseUserId: string; // ID of the confirmed/suspected case they contacted
+  contactDate: string;
+  durationMinutes: number;
+  proximity: "close" | "near" | "far";
+  contactUserRiskScore: RiskLevel;
+}
+
+// 3. Hotspot Mapping
+export interface Hotspot {
+  id: string;
+  name: string;
+  location: string; // e.g., "City Park Playground"
+  coordinates: { lat: number; lng: number };
+  riskLevel: RiskLevel;
+  type: "current" | "predicted";
+  reason?: string; // For predicted hotspots
+}
+
+export interface MedicalResource {
+  id: string;
+  name: string;
+  type: "Testing Center" | "Hospital" | "Clinic";
+  address: string;
+  coordinates: { lat: number; lng: number };
+}
+
+// 4. Symptom Reports Management
+export interface SymptomReport {
+  id: string;
+  userId: string; // Anonymized or real if permissions allow
+  timestamp: string; // ISO Date string
+  location?: string; // General location if provided
+  symptoms: string[];
+  severity: "Mild" | "Moderate" | "Severe";
+  status: "New" | "FollowUp" | "Resolved";
+  notes?: string;
+}
+
+// 5. AI Risk Scores Management
+export interface UserRiskProfile {
+  id: string; // User ID
+  displayName: string; // Name or anonymous ID
+  riskScore: RiskLevel;
+  riskScoreValue?: number; // Numerical score if available (0-100)
+  lastExposureTimestamp?: string; // ISO Date string
+  location?: string;
+  factors?: string[]; // Contributing factors to risk
+}
+
+// 6. Analytics & Reports (placeholder types)
+export interface TrendDataPoint {
+  date: string;
+  value: number;
+}
+
+// 7. Communication & Alerts Panel
+export interface AlertMessage {
+  id: string;
+  title: string;
+  content: string;
+  type: "Broadcast" | "Individual";
+  targetAudience?: string; // e.g., "All Users", "High-Risk Users in Downtown"
+  sentAt?: string; // ISO Date string
+}
+
+// No specific types for 8. Access Management & 9. Privacy Controls for mock UI beyond text
+
+// Main data structure for the entire dashboard (if needed, or panels manage their own)
+export interface AdminDashboardDataV2 {
+  overviewMetrics: OverviewMetric[];
+  heatmapData?: HeatmapDataPoint[]; // Optional
+  sentimentTrends?: SentimentDataPoint[];
+  contactLogs?: { nodes: ContactNode[], edges: ContactEdge[] };
+  flaggedContacts?: FlaggedContact[];
+  hotspots?: Hotspot[];
+  medicalResources?: MedicalResource[];
+  symptomReports?: SymptomReport[];
+  userRiskProfiles?: UserRiskProfile[];
+  // Add more as needed
 }

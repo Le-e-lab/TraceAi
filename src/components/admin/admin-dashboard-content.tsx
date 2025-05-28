@@ -2,84 +2,34 @@
 "use client";
 
 import type { UserRole } from "@/contexts/auth-context";
-import { AlertTriangle, Loader2, PlusCircle } from "lucide-react";
+import { AlertTriangle, LayoutDashboard, Network, MapPin as HotspotIcon, ClipboardList, ShieldCheck, BarChartBig, Megaphone, Users, EyeOff, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { AdminDashboardData } from "@/types/admin-dashboard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { IndividualHeader } from "./individual-header";
-import { OverviewTasks } from "./overview-tasks";
-import { OverviewExposureHistory } from "./overview-exposure-history";
-import { OverviewRecommendations } from "./overview-recommendations";
-import { OverviewCaseNotes } from "./overview-case-notes";
-import { Button } from "@/components/ui/button";
-
-// Mock Data Generation (should ideally be fetched from an API)
-const generateMockData = (): AdminDashboardData => {
-  const today = new Date();
-  const formatDate = (date: Date) => date.toLocaleDateString('en-US');
-
-  return {
-    selectedIndividual: {
-      id: "ind-001",
-      name: "Stephan Bastian", // From image
-      avatarUrl: "https://placehold.co/100x100.png",
-      avatarFallback: "SB",
-      dateOfBirth: "08/04/1959", // From image
-      age: 64, // Calculated from DOB
-      gender: "Male",
-      traceWiseId: "MRN 456789", // From image
-      phone: "(701) 293-4945", // From image
-      address: "900 Oak Ridge CIR, Brighton, MI 48116", // From image
-      contactSource: "Health Clinic Referral", // Analogous to "SafeLife BlueShield" / "Mayo Clinic" practice
-      assignedHealthOfficer: "Dr. Dawn Baker", // From image (PCP)
-      overallRiskLevel: "medium", // From image "Moderate"
-      riskFactors: { // From image
-        clinical: "medium", 
-        dda: "high" 
-      },
-      recentContactLogCount: 6, // From image "Clinical Enrolled Programs 6"
-      statusNotes: ["Requires follow-up for recent travel history.", "Vaccination status pending verification."], // From image "Patient Notes 6"
-    },
-    openTasks: [
-      { id: "task-1", title: "Additional Info needed", dueDate: formatDate(new Date(today.setDate(today.getDate() + 2))), status: "In Progress", description: "Gather travel history for the last 14 days.", actionLabel: "Add Info", assignedTo: "Admin User"},
-      { id: "task-2", title: "Contact Tracing Review", dueDate: formatDate(new Date(today.setDate(today.getDate() + 3))), status: "Pending", description: "Review new contacts reported by the individual.", actionLabel: "Review Contacts", assignedTo: "Jane Doe"},
-      { id: "task-3", title: "Testing Follow-up", dueDate: formatDate(new Date(today.setDate(today.getDate() + 1))), status: "Needs Review", description: "Confirm if COVID-19 test was scheduled and results received.", actionLabel: "Update Status", assignedTo: "Admin User"},
-    ],
-    exposureHistory: [
-      { id: "exp-1", eventType: "Location Visit", locationName: "Downtown Grocery Store", facilityType: "Retail", exposureDate: "10/25/2023", status: "Verified" },
-      { id: "exp-2", eventType: "Close Contact", locationName: "Friend's Gathering", facilityType: "Residential", exposureDate: "10/22/2023", status: "Unverified" },
-      { id: "exp-3", eventType: "Workplace Exposure", locationName: "Office Building - Floor 3", facilityType: "Commercial", exposureDate: "10/20/2023", status: "Under Investigation" },
-      { id: "exp-4", eventType: "Location Visit", locationName: "Central City Park", facilityType: "Outdoor", exposureDate: "10/18/2023", status: "Auto-Logged"},
-    ],
-    recommendedActions: [
-      { id: "act-1", actionName: "10-Day Self-Quarantine", startDate: formatDate(new Date(today.setDate(today.getDate() - 5))), reason: "High-Risk Exposure", details: "Monitor for symptoms daily. Avoid contact with others. Test on day 5 post-exposure.", duration: "10 days" },
-      { id: "act-2", actionName: "PCR Test Recommended", startDate: formatDate(today), reason: "Symptom Onset", details: "Schedule a PCR test at the nearest facility. Isolate until results are negative.", duration: "Until Result"},
-    ],
-    caseNotes: [
-      { id: "note-1", noteType: "General Update", status: "Active", date: formatDate(new Date(today.setDate(today.getDate() - 2))), details: "Individual reported mild cough, advised to monitor.", author: "Dr. Smith" },
-      { id: "note-2", noteType: "Intervention", status: "Referred", date: formatDate(today), details: "Referred to local public health for welfare check due to prolonged isolation.", author: "Support Team"},
-    ],
-  };
-};
-
+// Import panel components
+import { OverviewPanel } from "./panels/overview-panel";
+import { ExposureContactLogsPanel } from "./panels/exposure-contact-logs-panel";
+import { HotspotMappingPanel } from "./panels/hotspot-mapping-panel";
+import { SymptomReportsPanel } from "./panels/symptom-reports-panel";
+import { AIRiskScoresPanel } from "./panels/ai-risk-scores-panel";
+import { AnalyticsReportsPanel } from "./panels/analytics-reports-panel";
+import { CommunicationAlertsPanel } from "./panels/communication-alerts-panel";
+import { AccessManagementPanel } from "./panels/access-management-panel";
+import { PrivacyEthicsPanel } from "./panels/privacy-ethics-panel";
 
 interface AdminDashboardContentProps {
   userRole: UserRole | undefined | null;
 }
 
 export function AdminDashboardContent({ userRole }: AdminDashboardContentProps) {
-  const [data, setData] = useState<AdminDashboardData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Simulate initial loading if needed
 
   useEffect(() => {
-    // Simulate data fetching
-    setIsLoading(true);
+    // Simulate data fetching for the dashboard if necessary
     setTimeout(() => {
-      setData(generateMockData());
       setIsLoading(false);
-    }, 500); // Simulate network delay
+    }, 200); // Short delay
   }, []);
-
 
   if (userRole !== 'healthcare_worker') {
     return (
@@ -93,35 +43,47 @@ export function AdminDashboardContent({ userRole }: AdminDashboardContentProps) 
     );
   }
   
-  if (isLoading || !data) {
+  if (isLoading) {
     return (
       <div className="flex h-[calc(100vh-200px)] w-full items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
-         <p className="ml-3 text-muted-foreground">Loading Dashboard Data...</p>
+         <p className="ml-3 text-muted-foreground">Loading Dashboard...</p>
       </div>
     );
   }
 
-  return (
-    <div className="space-y-6">
-      <IndividualHeader individual={data.selectedIndividual} />
-      
-      <div className="flex justify-end mb-4">
-        <Button variant="default" className="bg-green-600 hover:bg-green-700 text-white">
-            <PlusCircle size={18} className="mr-2"/>
-            New Exposure/Visit
-        </Button>
-      </div>
+  const tabsConfig = [
+    { value: "overview", label: "Overview", icon: LayoutDashboard, panel: <OverviewPanel /> },
+    { value: "exposure-logs", label: "Exposure Logs", icon: Network, panel: <ExposureContactLogsPanel /> },
+    { value: "hotspot-mapping", label: "Hotspot Mapping", icon: HotspotIcon, panel: <HotspotMappingPanel /> },
+    { value: "symptom-reports", label: "Symptom Reports", icon: ClipboardList, panel: <SymptomReportsPanel /> },
+    { value: "risk-scores", label: "AI Risk Scores", icon: ShieldCheck, panel: <AIRiskScoresPanel /> },
+    { value: "analytics", label: "Analytics & Reports", icon: BarChartBig, panel: <AnalyticsReportsPanel /> },
+    { value: "communication", label: "Communication", icon: Megaphone, panel: <CommunicationAlertsPanel /> },
+    { value: "access-management", label: "Access Management", icon: Users, panel: <AccessManagementPanel /> },
+    { value: "privacy-ethics", label: "Privacy & Ethics", icon: EyeOff, panel: <PrivacyEthicsPanel /> },
+  ];
 
-      {/* Overview Section */}
-      <div className="space-y-6">
-        <OverviewTasks tasks={data.openTasks} />
-        <OverviewExposureHistory history={data.exposureHistory} />
-        <OverviewRecommendations actions={data.recommendedActions} />
-        <OverviewCaseNotes notes={data.caseNotes} />
-      </div>
+  return (
+    <div className="space-y-6 w-full">
+      <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Healthcare Worker Dashboard</h1>
       
-      {/* Removed old charts and summary cards */}
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9 mb-4">
+          {tabsConfig.map(tab => (
+            <TabsTrigger key={tab.value} value={tab.value} className="text-xs sm:text-sm py-2 px-1 flex items-center gap-1.5">
+              <tab.icon className="h-4 w-4" />
+              {tab.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        {tabsConfig.map(tab => (
+          <TabsContent key={tab.value} value={tab.value} className="mt-0">
+            {tab.panel}
+          </TabsContent>
+        ))}
+      </Tabs>
     </div>
   );
 }
